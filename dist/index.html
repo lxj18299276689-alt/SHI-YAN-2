@@ -114,13 +114,6 @@
     .section-head p { margin: 7px 0 0; color: var(--muted); }
     .more { padding: 0; border: 0; background: none; color: var(--blue); font: inherit; font-weight: 800; font-size: 14px; cursor: pointer; white-space: nowrap; }
 
-    .categories { display: grid; grid-template-columns: repeat(6, 1fr); gap: 13px; }
-    .category { padding: 19px 16px; border: 1px solid var(--line); border-top: 4px solid var(--blue); border-radius: 10px; background: white; text-align: left; font: inherit; color: inherit; cursor: pointer; transition: .2s ease; }
-    .category:hover { transform: translateY(-3px); border-color: #9bb8d6; border-top-color: var(--lime); box-shadow: 0 10px 24px rgba(16, 42, 67, .09); }
-    .category i { display: block; margin-bottom: 13px; font-style: normal; font-size: 26px; }
-    .category strong { font-size: 15px; }
-    .category small { display: block; color: var(--muted); margin-top: 2px; }
-
     .events { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
     .event { overflow: hidden; display: flex; flex-direction: column; background: white; border-radius: 14px; border: 1px solid var(--line); box-shadow: 0 8px 28px rgba(16, 42, 67, .06); }
     .event-cover { height: 140px; padding: 21px; position: relative; display: flex; align-items: flex-end; }
@@ -146,6 +139,11 @@
     .chip.student { color: #154f40; background: #dff5ed; }
     .info-alert { margin-top: 13px; padding: 10px 11px; border-radius: 9px; background: #fff8e6; color: #71551b; font-size: 13px; }
     .info-alert.high { background: #fff0ef; color: #8b1e18; }
+    .assistant-box { margin-top: 13px; padding: 12px 13px; border-left: 3px solid var(--blue); border-radius: 8px; background: #f4f8fc; }
+    .assistant-box strong { display: block; margin-bottom: 5px; color: var(--ink); font-size: 13px; }
+    .assistant-box ul, .assistant-detail-list { margin: 0; padding-left: 19px; color: #53687c; font-size: 13px; }
+    .assistant-box li + li, .assistant-detail-list li + li { margin-top: 3px; }
+    .assistant-label { display: inline-flex; align-items: center; gap: 6px; color: var(--blue); }
     .notice-details { margin-top: 13px; border-top: 1px dashed var(--line); padding-top: 11px; font-size: 13px; }
     .notice-details summary { color: var(--blue); font-weight: 800; cursor: pointer; }
     .notice-details p { margin: 8px 0 0; color: var(--muted); }
@@ -155,7 +153,6 @@
     .feed-meta { display: flex; justify-content: space-between; gap: 16px; margin: 0 0 20px; color: var(--muted); font-size: 13px; }
     .data-note { padding: 10px 13px; border-radius: 8px; background: #edf4fa; }
     .empty-feed { grid-column: 1 / -1; padding: 55px 20px; border: 1px dashed #b9cbdc; border-radius: 14px; color: var(--muted); text-align: center; }
-    .category.active { border-color: #7ca1c7; border-top-color: var(--lime); background: #f8fbfe; box-shadow: 0 8px 22px rgba(16, 42, 67, .08); }
 
     .safety {
       margin-top: 64px; display: grid; grid-template-columns: 1fr 1.45fr; gap: 56px;
@@ -216,7 +213,6 @@
       .nav-links { display: none; }
       .hero { grid-template-columns: 1fr; gap: 32px; padding-top: 52px; }
       .hero-board { height: 360px; }
-      .categories { grid-template-columns: repeat(3, 1fr); }
       .events { grid-template-columns: 1fr 1fr; }
       .event:last-child { grid-column: 1 / -1; }
       .feed-tools { grid-template-columns: 1fr 1fr; }
@@ -235,7 +231,6 @@
       .board { inset: 14px 3px 14px 8px; padding: 24px 20px; }
       .sticker.one { left: -5px; }
       .sticker.two { right: -4px; }
-      .categories { grid-template-columns: repeat(2, 1fr); }
       .events { grid-template-columns: 1fr; }
       .event:last-child { grid-column: auto; }
       .section { padding: 50px 0; }
@@ -302,23 +297,6 @@
       </div>
     </section>
 
-    <section class="section soft">
-      <div class="shell">
-        <div class="section-head">
-          <div><h2>同学活动分类</h2><p>这里汇总全部非官方活动，并按具体项目类型分类。</p></div>
-          <button class="more" type="button" data-open-all>查看全部分类 →</button>
-        </div>
-        <div class="categories">
-          <button class="category" type="button" data-feed-category="比赛挑战"><i>🏆</i><strong>比赛挑战</strong><small data-count-category="比赛挑战">0 项</small></button>
-          <button class="category" type="button" data-feed-category="学习分享"><i>📚</i><strong>学习分享</strong><small data-count-category="学习分享">0 项</small></button>
-          <button class="category" type="button" data-feed-category="项目招募"><i>🧩</i><strong>项目招募</strong><small data-count-category="项目招募">0 项</small></button>
-          <button class="category" type="button" data-feed-category="志愿实践"><i>🤝</i><strong>志愿实践</strong><small data-count-category="志愿实践">0 项</small></button>
-          <button class="category" type="button" data-feed-category="校园活动"><i>📌</i><strong>校园活动</strong><small data-count-category="校园活动">0 项</small></button>
-          <button class="category" type="button" data-feed-category="学生发布"><i>🎒</i><strong>学生发布</strong><small data-count-category="学生发布">0 项</small></button>
-        </div>
-      </div>
-    </section>
-
     <section class="section">
       <div class="shell">
         <div class="section-head">
@@ -328,7 +306,7 @@
         <div class="feed-tools" aria-label="活动搜索和筛选">
           <input id="search-input" type="search" placeholder="搜索活动、地点、对象或条件">
           <select id="category-filter" aria-label="按活动类型筛选"><option value="all">全部类型</option><option>比赛挑战</option><option>学习分享</option><option>项目招募</option><option>志愿实践</option><option>校园活动</option><option>学生发布</option></select>
-          <select id="status-filter" aria-label="按状态筛选"><option value="all">全部状态</option><option value="today">今日活动</option><option value="closing">即将截止</option><option value="open">报名中</option><option value="long_term">长期招募/有效</option><option value="replay">等待回放</option><option value="waitlist">可候补</option><option value="uncertain">信息待确认</option><option value="updated">信息已更新</option><option value="risk">风险信息</option><option value="commercial">疑似推广</option></select>
+          <select id="status-filter" aria-label="按状态筛选"><option value="all">全部状态</option><option value="open">报名中</option><option value="today">今日活动</option><option value="upcoming">即将开始</option><option value="ongoing">进行中</option><option value="closing">即将截止</option><option value="ended">已结束</option><option value="replay">等待回放</option><option value="long_term">长期招募/有效</option><option value="unknown_capacity">满员状态未知</option><option value="waitlist">报名截止但可候补</option><option value="updated">信息已更新</option><option value="uncertain">信息待确认</option><option value="risk">风险信息</option><option value="commercial">疑似推广</option></select>
           <select id="audience-filter" aria-label="按适合人群筛选"><option value="all">全部人群</option><option value="newcomer">新生友好</option><option value="student">学生个人发布</option></select>
         </div>
         <div class="feed-meta"><span id="result-count">正在载入活动…</span><span class="data-note">官方活动已单独收录在“官方活动”子页面</span></div>
@@ -521,11 +499,14 @@
 
     function allFeedItems() {
       const builtIn = (window.CAMPUS_ACTIVITIES || []).filter(item => !item.official);
-      return [...getPublishedEvents().map(normalizePublished), ...builtIn].map(withTimeStatus);
+      return [...getPublishedEvents().map(normalizePublished), ...builtIn].map(withTimeStatus).map(item => ({
+        ...item,
+        assistant: window.CAMPUS_ASSISTANT.analyzeActivity(item)
+      }));
     }
 
     function chipClass(item, tag) {
-      if (item.riskLevel === 'high' || tag.includes('风险') || tag.includes('商业')) return 'risk';
+      if (tag.includes('风险') || tag.includes('商业')) return 'risk';
       if (item.studentPublished) return 'student';
       if (tag.includes('更新')) return 'updated';
       return '';
@@ -535,10 +516,16 @@
       const style = categoryStyle[item.category] || categoryStyle['校园活动'];
       const missing = item.missing || [];
       const riskClass = item.riskLevel === 'high' ? ' high' : '';
-      const alertParts = [];
-      if (item.riskLabel) alertParts.push(`<b>${escapeHTML(item.riskLabel)}</b>`);
-      if (missing.length) alertParts.push(`缺失/待确认：${escapeHTML(missing.join('、'))}`);
+      const assistant = item.assistant || window.CAMPUS_ASSISTANT.analyzeActivity(item);
+      const alertParts = assistant.risk.reasons.slice(0, 3);
       const notices = (item.notices || []).map(notice => `<p><b>${escapeHTML(notice.id)} · ${escapeHTML(notice.type)}：</b>${escapeHTML(notice.text)}</p>`).join('');
+      const reasons = assistant.attentionReasons.length
+        ? `<div class="assistant-box"><strong><span class="assistant-label">✦ 拾机助手</span> · 为什么值得关注</strong><ul>${assistant.attentionReasons.map(reason => `<li>${escapeHTML(reason)}</li>`).join('')}</ul></div>`
+        : '';
+      const detailItems = [...assistant.informationTips, ...assistant.risk.reasons];
+      const details = detailItems.length || notices
+        ? `<details class="notice-details"><summary>查看判断依据与完整提示</summary>${assistant.risk.label ? `<p><b>${escapeHTML(assistant.risk.label)}</b></p>` : ''}${detailItems.length ? `<ul class="assistant-detail-list">${detailItems.map(tip => `<li>${escapeHTML(tip)}</li>`).join('')}</ul>` : ''}${item.updateSummary ? `<p><b>更新摘要：</b>${escapeHTML(item.updateSummary)}</p>` : ''}${notices}</details>`
+        : '';
       const sourceInitial = item.studentPublished ? '生' : '讯';
       const footerRight = item.studentPublished && item.size ? `计划 ${escapeHTML(item.size)} 人` : `编号 ${escapeHTML((item.originalIds || []).join(' / ') || '用户发布')}`;
       return `<article class="event" data-id="${escapeHTML(item.id)}">
@@ -552,9 +539,10 @@
             <span>📋 ${escapeHTML(item.conditions || '未提供')}</span>
           </div>
           <p class="event-summary">${escapeHTML(item.summary || '')}</p>
-          <div class="chips">${(item.statusTags || []).map(tag => `<span class="chip ${chipClass(item, tag)}">${escapeHTML(tag)}</span>`).join('')}</div>
-          ${alertParts.length ? `<div class="info-alert${riskClass}">${alertParts.join('；')}</div>` : ''}
-          ${notices ? `<details class="notice-details"><summary>查看原通知与更新关系</summary>${item.updateSummary ? `<p><b>变更摘要：</b>${escapeHTML(item.updateSummary)}</p>` : ''}${notices}</details>` : ''}
+          <div class="chips">${assistant.cardStatuses.map(tag => `<span class="chip ${chipClass(item, tag)}">${escapeHTML(tag)}</span>`).join('')}</div>
+          ${assistant.risk.label ? `<div class="info-alert${riskClass}"><b>${escapeHTML(assistant.risk.label)}</b>${alertParts.length ? `：${escapeHTML(alertParts.join('；'))}` : ''}</div>` : ''}
+          ${reasons}
+          ${details}
           <div class="event-foot"><div class="host"><span class="host-avatar">${sourceInitial}</span><span>${escapeHTML(item.sourceLabel || '来源未明确')}</span></div><span class="seats">${footerRight}</span></div>
         </div>
       </article>`;
@@ -562,27 +550,24 @@
 
     function matchesFilters(item) {
       const query = searchInput.value.trim().toLowerCase();
-      const haystack = [item.title, item.category, item.recordKind, item.location, item.audience, item.conditions, item.summary, item.sourceLabel, ...(item.statusTags || [])].join(' ').toLowerCase();
+      const assistant = item.assistant || window.CAMPUS_ASSISTANT.analyzeActivity(item);
+      const haystack = [item.title, item.category, item.recordKind, item.location, item.audience, item.conditions, item.summary, item.sourceLabel, ...assistant.statuses, ...assistant.informationTips, ...assistant.attentionReasons].join(' ').toLowerCase();
       const categoryOK = categoryFilter.value === 'all' || item.category === categoryFilter.value;
       const status = statusFilter.value;
-      const statusOK = status === 'all' || (status === 'risk' ? item.riskLevel === 'high' : (item.statusCodes || []).includes(status));
+      const statusLabels = { open: '报名中', today: '今日活动', upcoming: '即将开始', ongoing: '进行中', closing: '即将截止', ended: '已结束', replay: '等待回放', long_term: '长期招募', unknown_capacity: '满员状态未知', waitlist: '报名已截止但可候补', updated: '信息已更新', uncertain: '信息待确认' };
+      const statusOK = status === 'all'
+        || (status === 'risk' && Boolean(assistant.risk.label))
+        || (status === 'commercial' && assistant.risk.label === '疑似商业推广')
+        || assistant.statuses.includes(statusLabels[status])
+        || (status === 'long_term' && assistant.statuses.includes('长期有效'));
       const audience = audienceFilter.value;
       const audienceOK = audience === 'all' || (audience === 'newcomer' && item.newcomerFriendly) || (audience === 'student' && item.studentPublished);
       return (!query || haystack.includes(query)) && categoryOK && statusOK && audienceOK;
     }
 
-    function updateCategoryCounts(items) {
-      document.querySelectorAll('[data-count-category]').forEach(node => {
-        const category = node.dataset.countCategory;
-        node.textContent = `${items.filter(item => item.category === category).length} 项`;
-      });
-      document.querySelectorAll('[data-feed-category]').forEach(button => button.classList.toggle('active', categoryFilter.value === button.dataset.feedCategory));
-    }
-
     function renderFeed() {
       const items = allFeedItems();
       const filtered = items.filter(matchesFilters);
-      updateCategoryCounts(items);
       document.getElementById('result-count').textContent = `共 ${items.length} 条，当前显示 ${filtered.length} 条`;
       eventList.innerHTML = filtered.length ? filtered.map(renderCard).join('') : '<div class="empty-feed">没有找到符合条件的活动，试试清除筛选或更换关键词。</div>';
     }
@@ -645,9 +630,6 @@
     function loadSession() { try { currentUser = JSON.parse(localStorage.getItem(sessionKey) || 'null'); } catch (_) { currentUser = null; } updateAuthUI(); }
 
     [searchInput, categoryFilter, statusFilter, audienceFilter].forEach(control => control.addEventListener(control === searchInput ? 'input' : 'change', renderFeed));
-    document.querySelectorAll('[data-feed-category]').forEach(button => button.addEventListener('click', () => {
-      categoryFilter.value = button.dataset.feedCategory; renderFeed(); document.getElementById('event-list').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }));
     document.querySelectorAll('[data-open-discover]').forEach(button => button.addEventListener('click', () => clearFilters(true)));
     document.querySelectorAll('[data-open-all]').forEach(button => button.addEventListener('click', () => clearFilters(true)));
     document.querySelectorAll('[data-open-publish]').forEach(button => button.addEventListener('click', openPublish));

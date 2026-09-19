@@ -146,6 +146,121 @@
     }
   });
 
-  window.CAMPUS_DATA_REFERENCE_DATE = '2026-09-19';
+  const REFERENCE_DATE = '2026-09-19';
+  const statusPriority = ['信息风险较高', '疑似商业推广', '进行中', '今日活动', '即将截止', '报名已截止但可候补', '已结束', '等待回放', '信息已更新', '报名中', '即将开始', '长期招募', '长期有效', '当前提取信息即将失效', '满员状态未知', '信息待确认'];
+
+  function unique(values) {
+    return [...new Set(values.filter(Boolean))];
+  }
+
+  function getReferenceNow() {
+    const now = new Date();
+    const localDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    return localDate === REFERENCE_DATE ? now : new Date('2026-09-19T12:00:00+08:00');
+  }
+
+  function normalizeMissingInfo(value) {
+    const exact = {
+      '地点': '地点待确认', '活动地点': '地点待确认', '服务地点': '地点待确认', '最终场地': '地点待确认', '具体教室': '具体教室待确认',
+      '报名截止时间': '报名时间未注明', '预约截止时间': '预约截止时间未注明', '当前人数': '当前名额未知', '剩余名额': '当前名额未知',
+      '具体费用': '费用信息未提供', 'AA费用金额': '费用信息未提供', '具体截止时刻': '具体截止时刻未注明',
+      '主办方': '主办方缺失', '明确组织方': '组织方缺失', '时间': '时间缺失', '具体时间': '具体时间待确认'
+    };
+    return exact[value] || `${value}未提供`;
+  }
+
+  function deriveStatuses(activity, referenceNow) {
+    let statuses = [...(activity.statusTags || [])];
+    const codes = activity.statusCodes || [];
+
+    statuses = statuses.filter(status => !['新生友好', '无需报名', '座位有限', '等待审核', '多阶段', '满员即止', '高风险', '待核实', '疑似商业推广', '费用待确认', '截止时间待确认', '提取信息即将失效', '长期活动'].includes(status));
+    if (activity.id === '04') statuses.unshift('已结束');
+    if (activity.id === '06' || activity.id === '08') statuses.push('满员状态未知');
+    if (activity.id === '17') statuses.push('长期有效', '当前提取信息即将失效');
+    if (activity.id === '19') statuses = statuses.filter(status => !['报名已截止', '可候补'].includes(status)).concat('报名已截止但可候补');
+    if (codes.includes('uncertain') || codes.includes('review') || String(activity.completeness || '').includes('关键信息') || activity.riskLevel === 'caution' || activity.riskLevel === 'high') statuses.push('信息待确认');
+
+    if (activity.id === '10' && activity.start) {
+      statuses = statuses.filter(status => !['即将开始', '进行中', '已结束'].includes(status));
+      const start = new Date(activity.start);
+      const end = activity.end ? new Date(activity.end) : null;
+      if (referenceNow < start) statuses.push('即将开始');
+      else if (!end || referenceNow <= end) statuses.push('进行中');
+      else statuses.push('已结束');
+    }
+
+    if (!statuses.includes('即将开始') && activity.start && new Date(activity.start) > referenceNow && !codes.includes('long_term')) statuses.push('即将开始');
+    return unique(statuses).sort((a, b) => {
+      const aIndex = statusPriority.indexOf(a);
+      const bIndex = statusPriority.indexOf(b);
+      return (aIndex < 0 ? 99 : aIndex) - (bIndex < 0 ? 99 : bIndex);
+    });
+  }
+
+  function deriveInfoTips(activity) {
+    const tips = (activity.missing || []).map(normalizeMissingInfo);
+    const conditions = activity.conditions || '';
+    if (conditions.includes('提交报名表不代表录取') || conditions.includes('以审核通知为准')) tips.push('提交后仍需审核，不代表已经录取');
+    if (conditions.includes('无需报名') && (conditions.includes('座位有限') || conditions.includes('容量有限'))) tips.push('无需报名，但现场容量有限');
+    if (conditions.includes('报名时间未注明')) tips.push('报名时间未注明');
+    if (conditions.includes('费用信息未提供')) tips.push('费用信息未提供');
+    if (activity.id === '17') tips.push('资料长期开放，但当前提取信息仅有效至9月22日');
+    if (activity.id === '19') tips.push('报名已截止；仅在现场有余位时可候补，名额不保证');
+    return unique(tips);
+  }
+
+  function deriveRisk(activity) {
+    if (activity.id === '24') return {
+      label: '信息风险较高',
+      reasons: ['主办方缺失', '时间/地点缺失', '要求添加私人微信获取详情', '建议核实发布者与活动真实性后再参与']
+    };
+    if (activity.id === '25') return {
+      label: '疑似商业推广',
+      reasons: ['主要内容为商家优惠及购买链接', '时间缺失', '地点缺失']
+    };
+    if (activity.riskLevel === 'caution') return {
+      label: activity.riskLabel || '信息需要核实',
+      reasons: ['这是学生个人发布内容，参与前请确认时间、地点和费用']
+    };
+    return { label: '', reasons: [] };
+  }
+
+  function deriveAttentionReasons(activity, statuses) {
+    const reasons = [];
+    const audience = activity.audience || '';
+    const conditions = activity.conditions || '';
+    if (audience.includes('大一新生')) reasons.push('主要面向大一新生');
+    else if (audience.includes('全校学生')) reasons.push('面向全校学生');
+    if ((activity.title || '').includes('零基础') || audience.includes('零基础') || conditions.includes('零基础') || conditions.includes('不限基础')) reasons.push('零基础也可参与');
+    if (conditions.includes('无需报名')) reasons.push('无需报名');
+    if (conditions.includes('提前预约')) reasons.push('需要提前预约');
+    if (conditions.includes('提交报名表不代表录取') || conditions.includes('以审核通知为准')) reasons.push('提交后仍需等待审核');
+    if (statuses.includes('今日活动')) reasons.push('活动在今天举行');
+    if (statuses.includes('即将开始')) reasons.push('活动即将开始');
+    if (statuses.includes('报名中')) reasons.push('当前仍可报名');
+    if (statuses.includes('即将截止')) reasons.push('报名或提交时间即将截止');
+    if (statuses.includes('等待回放')) reasons.push('直播已经结束，正在等待回放');
+    if (statuses.includes('长期招募')) reasons.push('属于长期招募机会');
+    if (statuses.includes('长期有效')) reasons.push('资料长期开放');
+    if (statuses.includes('报名已截止但可候补')) reasons.push('报名截止后仍有候补机会');
+    if (statuses.includes('信息已更新')) reasons.push('已有补充通知，应以最新信息为准');
+    return unique(reasons).slice(0, 4);
+  }
+
+  function analyzeActivity(activity, referenceNow = getReferenceNow()) {
+    const statuses = deriveStatuses(activity, referenceNow);
+    const risk = deriveRisk(activity);
+    return {
+      statuses,
+      cardStatuses: statuses.slice(0, 4),
+      informationTips: deriveInfoTips(activity),
+      risk,
+      attentionReasons: deriveAttentionReasons(activity, statuses),
+      hasUpdate: Boolean(activity.updateSummary || (activity.notices || []).length > 1)
+    };
+  }
+
+  window.CAMPUS_DATA_REFERENCE_DATE = REFERENCE_DATE;
+  window.CAMPUS_ASSISTANT = { analyzeActivity, getReferenceNow };
   window.CAMPUS_ACTIVITIES = activities;
 })();

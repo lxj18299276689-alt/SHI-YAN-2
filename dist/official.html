@@ -66,7 +66,18 @@
     .detail-block b { display: block; margin-bottom: 3px; color: var(--ink); }
     .status-row { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; }
     .status.user { color: #154f40; background: #dff5ed; }
+    .status.updated { color: #604300; background: #fff0c7; }
+    .status.uncertain { color: #5d4d24; background: #f5efe0; }
+    .status.closed { color: #5e6873; background: #edf0f3; }
+    .status.active { color: #164f41; background: #dff5ed; }
     .warning { margin-top: 10px; padding: 11px 13px; border-radius: 8px; color: #71551b; background: #fff8e6; font-size: 13px; }
+    .assistant-box { margin-top: 12px; padding: 13px 14px; border-left: 3px solid var(--blue); border-radius: 8px; background: #f4f8fc; }
+    .assistant-box b { display: block; margin-bottom: 5px; font-size: 14px; }
+    .assistant-box ul, .assistant-details ul { margin: 0; padding-left: 20px; color: #53687c; font-size: 13px; }
+    .assistant-box li + li, .assistant-details li + li { margin-top: 3px; }
+    .assistant-details { margin-top: 10px; padding: 11px 13px; border: 1px solid var(--line); border-radius: 8px; background: #fff; font-size: 13px; }
+    .assistant-details summary { color: var(--blue); font-weight: 800; cursor: pointer; }
+    .assistant-details p { margin: 8px 0 0; color: var(--muted); }
     dialog { width: min(680px, calc(100% - 28px)); max-height: calc(100vh - 30px); padding: 0; border: 0; border-radius: 18px; color: var(--ink); background: white; box-shadow: 0 28px 80px rgba(16,42,67,.28); }
     dialog::backdrop { background: rgba(8,27,48,.62); backdrop-filter: blur(4px); }
     .dialog-head { display: flex; justify-content: space-between; align-items: start; padding: 25px 28px 19px; border-bottom: 1px solid var(--line); }
@@ -139,7 +150,7 @@
         <div class="filter-bar" aria-label="官方活动筛选">
           <input id="official-search" type="search" placeholder="搜索活动、地点、对象或参与条件">
           <select id="official-category" aria-label="按活动类型筛选"><option value="all">全部类型</option><option>比赛挑战</option><option>学习分享</option><option>项目招募</option><option>志愿实践</option><option>校园活动</option></select>
-          <select id="official-status" aria-label="按状态筛选"><option value="all">全部状态</option><option value="today">今日活动</option><option value="open">报名中</option><option value="closing">即将截止</option><option value="long_term">长期招募/有效</option><option value="replay">等待回放</option><option value="waitlist">可候补</option><option value="uncertain">信息待确认</option><option value="updated">信息已更新</option></select>
+          <select id="official-status" aria-label="按状态筛选"><option value="all">全部状态</option><option value="open">报名中</option><option value="today">今日活动</option><option value="upcoming">即将开始</option><option value="ongoing">进行中</option><option value="closing">即将截止</option><option value="ended">已结束</option><option value="replay">等待回放</option><option value="long_term">长期招募/有效</option><option value="unknown_capacity">满员状态未知</option><option value="waitlist">报名截止但可候补</option><option value="updated">信息已更新</option><option value="uncertain">信息待确认</option></select>
           <select id="official-audience" aria-label="按适用对象筛选"><option value="all">全部对象</option><option value="newcomer">新生友好</option></select>
           <button class="filter-reset" id="reset-filters" type="button">清除筛选</button>
         </div>
@@ -214,7 +225,7 @@
 
     function getActivities() {
       const builtIn = (window.CAMPUS_ACTIVITIES || []).filter(item => item.official).map(item => ({
-        id: item.id, type: item.title, source: item.officialScope, college: item.college || '',
+        id: item.id, type: item.title, source: item.officialScope, college: item.college || '', original: item,
         timeText: item.timeText, location: item.location, audience: item.audience, condition: item.conditions,
         description: item.summary, statuses: item.statusTags || [], statusCodes: item.statusCodes || [],
         category: item.category, newcomerFriendly: Boolean(item.newcomerFriendly), sourceLabel: item.sourceLabel,
@@ -227,7 +238,14 @@
         sourceLabel: item.source === 'school' ? '用户录入 · 校级活动' : `用户录入 · ${item.college || '院级活动'}`,
         missing: [], builtIn: false
       }));
-      return [...local, ...builtIn];
+      return [...local, ...builtIn].map(item => ({
+        ...item,
+        assistant: window.CAMPUS_ASSISTANT.analyzeActivity(item.original || {
+          id: item.id, title: item.type, audience: item.audience, conditions: item.condition,
+          statusTags: item.statuses, statusCodes: item.statusCodes, missing: item.missing,
+          riskLevel: item.builtIn ? 'none' : 'caution'
+        })
+      }));
     }
 
     function escapeHTML(value) {
@@ -242,9 +260,12 @@
       const scopeItems = getActivities().filter(item => item.source === currentScope);
       const query = searchInput.value.trim().toLowerCase();
       const items = scopeItems.filter(item => {
-        const haystack = [item.type, item.category, item.location, item.audience, item.condition, item.description, item.sourceLabel, ...(item.statuses || [])].join(' ').toLowerCase();
+        const haystack = [item.type, item.category, item.location, item.audience, item.condition, item.description, item.sourceLabel, ...item.assistant.statuses, ...item.assistant.informationTips, ...item.assistant.attentionReasons].join(' ').toLowerCase();
         const categoryOK = categoryFilter.value === 'all' || item.category === categoryFilter.value;
-        const statusOK = statusFilter.value === 'all' || (item.statusCodes || []).includes(statusFilter.value);
+        const statusLabels = { open: '报名中', today: '今日活动', upcoming: '即将开始', ongoing: '进行中', closing: '即将截止', ended: '已结束', replay: '等待回放', long_term: '长期招募', unknown_capacity: '满员状态未知', waitlist: '报名已截止但可候补', updated: '信息已更新', uncertain: '信息待确认' };
+        const statusOK = statusFilter.value === 'all'
+          || item.assistant.statuses.includes(statusLabels[statusFilter.value])
+          || (statusFilter.value === 'long_term' && item.assistant.statuses.includes('长期有效'));
         const audienceOK = audienceFilter.value === 'all' || (audienceFilter.value === 'newcomer' && item.newcomerFriendly);
         return (!query || haystack.includes(query)) && categoryOK && statusOK && audienceOK;
       });
@@ -256,10 +277,22 @@
       }
       activityList.innerHTML = items.map(item => {
         const source = item.builtIn ? item.sourceLabel : (item.source === 'school' ? '用户录入 · 校级活动' : `用户录入 · ${escapeHTML(item.college)}`);
-        const statuses = (item.statuses || [item.status]).map(status => `<span class="status${item.builtIn ? '' : ' user'}">${escapeHTML(status)}</span>`).join('');
+        const statuses = item.assistant.cardStatuses.map(status => {
+          const tone = status.includes('更新') ? ' updated' : status.includes('待确认') || status.includes('未知') ? ' uncertain' : status.includes('结束') ? ' closed' : ['报名中', '进行中', '今日活动'].includes(status) ? ' active' : '';
+          return `<span class="status${item.builtIn ? tone : ' user'}">${escapeHTML(status)}</span>`;
+        }).join('');
         const warning = item.builtIn
-          ? (item.missing.length ? `<div class="warning"><b>信息完整性提示：</b>缺失或待确认：${escapeHTML(item.missing.join('、'))}</div>` : '')
+          ? ''
           : '<div class="warning"><b>来源提示：</b>此条内容由用户录入，尚未由平台核验，请对照原通知确认。</div>';
+        const assistantBox = item.assistant.attentionReasons.length
+          ? `<div class="assistant-box"><b>✦ 拾机助手 · 为什么值得关注</b><ul>${item.assistant.attentionReasons.map(reason => `<li>${escapeHTML(reason)}</li>`).join('')}</ul></div>`
+          : '';
+        const notices = item.original && (item.original.notices || []).length
+          ? (item.original.notices || []).map(notice => `<p><b>${escapeHTML(notice.id)} · ${escapeHTML(notice.type)}：</b>${escapeHTML(notice.text)}</p>`).join('')
+          : '';
+        const assistantDetails = item.assistant.informationTips.length || notices
+          ? `<details class="assistant-details"><summary>${item.assistant.hasUpdate ? '查看更新说明与完整提示' : '查看信息完整性提示'}</summary>${item.assistant.informationTips.length ? `<ul>${item.assistant.informationTips.map(tip => `<li>${escapeHTML(tip)}</li>`).join('')}</ul>` : ''}${item.original?.updateSummary ? `<p><b>更新摘要：</b>${escapeHTML(item.original.updateSummary)}</p>` : ''}${notices}</details>`
+          : '';
         return `<article class="official-card">
           <div class="card-head"><div><h2>${escapeHTML(item.type)}</h2><div class="source">来源：${source}${item.builtIn ? ` · 编号 ${escapeHTML(item.id)}` : ''}</div></div><div class="status-row">${statuses}</div></div>
           <div class="info-grid">
@@ -269,6 +302,8 @@
           </div>
           <div class="detail-block"><b>报名 / 参与条件</b>${escapeHTML(item.condition)}</div>
           <div class="detail-block"><b>原始说明</b>${escapeHTML(item.description)}</div>
+          ${assistantBox}
+          ${assistantDetails}
           ${warning}
         </article>`;
       }).join('');

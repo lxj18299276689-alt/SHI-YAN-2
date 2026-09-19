@@ -42,6 +42,11 @@
     .tab { min-height: 42px; padding: 0 20px; border: 1px solid var(--line); border-radius: 8px; color: #55687a; background: white; font: inherit; font-size: 14px; font-weight: 800; cursor: pointer; }
     .tab.active { color: white; border-color: var(--blue); background: var(--blue); }
     .content { padding: 28px; }
+    .filter-bar { display: grid; grid-template-columns: 1.5fr repeat(3, minmax(140px, .7fr)) auto; gap: 10px; margin-bottom: 12px; }
+    .filter-bar input, .filter-bar select { min-height: 44px; padding: 0 12px; border: 1px solid var(--line); border-radius: 9px; color: var(--ink); background: white; font: inherit; font-size: 14px; outline: none; }
+    .filter-bar input:focus, .filter-bar select:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(11,79,156,.10); }
+    .filter-reset { min-height: 44px; padding: 0 16px; border: 1px solid var(--line); border-radius: 9px; color: var(--blue); background: white; font: inherit; font-weight: 800; cursor: pointer; }
+    .filter-summary { margin: 0 0 18px; color: var(--muted); font-size: 13px; }
     .empty { min-height: 390px; display: grid; place-items: center; padding: 42px 20px; border: 1px dashed #b8c9d9; border-radius: 12px; background: var(--soft); text-align: center; }
     .empty-inner { max-width: 410px; }
     .empty-icon { width: 66px; height: 66px; margin: 0 auto 18px; display: grid; place-items: center; border-radius: 13px; color: white; background: var(--blue); font-size: 28px; font-weight: 900; box-shadow: 0 10px 24px rgba(11,79,156,.18); }
@@ -95,11 +100,17 @@
       .tabs { padding: 16px; }
       .tab { flex: 1; padding: 0 10px; }
       .content { padding: 16px; }
+      .filter-bar { grid-template-columns: 1fr 1fr; }
+      .filter-bar input { grid-column: 1 / -1; }
       .empty { min-height: 330px; }
       .info-grid, .field-row { grid-template-columns: 1fr; }
       .dialog-head { padding: 22px 20px 17px; }
       form { padding: 20px; }
       .footer-inner { flex-direction: column; }
+    }
+    @media (max-width: 520px) {
+      .filter-bar { grid-template-columns: 1fr; }
+      .filter-bar input { grid-column: auto; }
     }
   </style>
 </head>
@@ -125,6 +136,14 @@
         <button class="tab" id="college-tab" type="button" role="tab" aria-selected="false" aria-controls="official-content" data-scope="college">院级活动</button>
       </div>
       <div class="content" id="official-content" role="tabpanel" aria-labelledby="school-tab">
+        <div class="filter-bar" aria-label="官方活动筛选">
+          <input id="official-search" type="search" placeholder="搜索活动、地点、对象或参与条件">
+          <select id="official-category" aria-label="按活动类型筛选"><option value="all">全部类型</option><option>比赛挑战</option><option>学习分享</option><option>项目招募</option><option>志愿实践</option><option>校园活动</option></select>
+          <select id="official-status" aria-label="按状态筛选"><option value="all">全部状态</option><option value="today">今日活动</option><option value="open">报名中</option><option value="closing">即将截止</option><option value="long_term">长期招募/有效</option><option value="replay">等待回放</option><option value="waitlist">可候补</option><option value="uncertain">信息待确认</option><option value="updated">信息已更新</option></select>
+          <select id="official-audience" aria-label="按适用对象筛选"><option value="all">全部对象</option><option value="newcomer">新生友好</option></select>
+          <button class="filter-reset" id="reset-filters" type="button">清除筛选</button>
+        </div>
+        <p class="filter-summary" id="filter-summary">正在载入官方活动…</p>
         <div class="activity-list" id="activity-list"></div>
         <div class="empty" id="empty-state">
           <div class="empty-inner">
@@ -181,6 +200,11 @@
     const sourceSelect = document.getElementById('activity-source');
     const collegeField = document.getElementById('college-field');
     const collegeInput = document.getElementById('activity-college');
+    const searchInput = document.getElementById('official-search');
+    const categoryFilter = document.getElementById('official-category');
+    const statusFilter = document.getElementById('official-status');
+    const audienceFilter = document.getElementById('official-audience');
+    const filterSummary = document.getElementById('filter-summary');
     const storageKey = 'xiaoxun-official-events';
     let currentScope = 'school';
 
@@ -192,11 +216,14 @@
       const builtIn = (window.CAMPUS_ACTIVITIES || []).filter(item => item.official).map(item => ({
         id: item.id, type: item.title, source: item.officialScope, college: item.college || '',
         timeText: item.timeText, location: item.location, audience: item.audience, condition: item.conditions,
-        description: item.summary, statuses: item.statusTags || [], sourceLabel: item.sourceLabel,
+        description: item.summary, statuses: item.statusTags || [], statusCodes: item.statusCodes || [],
+        category: item.category, newcomerFriendly: Boolean(item.newcomerFriendly), sourceLabel: item.sourceLabel,
         missing: item.missing || [], builtIn: true
       }));
       const local = getUserActivities().map((item, index) => ({
         ...item, id: `local-official-${index}`, timeText: formatTime(item.time), statuses: [item.status],
+        statusCodes: [{ '报名中': 'open', '即将开始': 'upcoming', '进行中': 'today', '已结束': 'closed' }[item.status]].filter(Boolean),
+        category: item.type, newcomerFriendly: false,
         sourceLabel: item.source === 'school' ? '用户录入 · 校级活动' : `用户录入 · ${item.college || '院级活动'}`,
         missing: [], builtIn: false
       }));
@@ -212,8 +239,21 @@
     }
 
     function renderActivities() {
-      const items = getActivities().filter(item => item.source === currentScope);
+      const scopeItems = getActivities().filter(item => item.source === currentScope);
+      const query = searchInput.value.trim().toLowerCase();
+      const items = scopeItems.filter(item => {
+        const haystack = [item.type, item.category, item.location, item.audience, item.condition, item.description, item.sourceLabel, ...(item.statuses || [])].join(' ').toLowerCase();
+        const categoryOK = categoryFilter.value === 'all' || item.category === categoryFilter.value;
+        const statusOK = statusFilter.value === 'all' || (item.statusCodes || []).includes(statusFilter.value);
+        const audienceOK = audienceFilter.value === 'all' || (audienceFilter.value === 'newcomer' && item.newcomerFriendly);
+        return (!query || haystack.includes(query)) && categoryOK && statusOK && audienceOK;
+      });
       emptyState.hidden = items.length > 0;
+      filterSummary.textContent = `${currentScope === 'school' ? '校级活动' : '院级活动'}共 ${scopeItems.length} 条，当前显示 ${items.length} 条`;
+      if (!items.length && scopeItems.length) {
+        title.textContent = '没有符合筛选条件的活动';
+        copy.textContent = '可以清除筛选，或尝试其他关键词和条件。';
+      }
       activityList.innerHTML = items.map(item => {
         const source = item.builtIn ? item.sourceLabel : (item.source === 'school' ? '用户录入 · 校级活动' : `用户录入 · ${escapeHTML(item.college)}`);
         const statuses = (item.statuses || [item.status]).map(status => `<span class="status${item.builtIn ? '' : ' user'}">${escapeHTML(status)}</span>`).join('');
@@ -250,6 +290,14 @@
     }
 
     tabs.forEach(tab => tab.addEventListener('click', () => selectScope(tab.dataset.scope)));
+    [searchInput, categoryFilter, statusFilter, audienceFilter].forEach(control => control.addEventListener(control === searchInput ? 'input' : 'change', renderActivities));
+    document.getElementById('reset-filters').addEventListener('click', () => {
+      searchInput.value = '';
+      categoryFilter.value = 'all';
+      statusFilter.value = 'all';
+      audienceFilter.value = 'all';
+      renderActivities();
+    });
     sourceSelect.addEventListener('change', () => {
       const isCollege = sourceSelect.value === 'college';
       collegeField.hidden = !isCollege;

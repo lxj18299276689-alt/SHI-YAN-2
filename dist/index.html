@@ -49,14 +49,14 @@
       box-shadow: 0 7px 18px rgba(11, 79, 156, .20); border-bottom: 4px solid var(--lime);
     }
     .nav-links { display: flex; gap: 30px; color: #555f78; font-size: 15px; }
-    .nav-link { border: 0; padding: 0; color: inherit; background: none; font: inherit; cursor: pointer; }
+    .nav-link { border: 0; padding: 0; color: inherit; background: none; font: inherit; cursor: pointer; text-decoration: none; }
     .nav-link:first-child { color: var(--ink); font-weight: 700; }
     .nav-actions { display: flex; gap: 10px; align-items: center; }
     .btn {
       min-height: 42px; padding: 0 19px; border-radius: 12px; display: inline-flex;
       align-items: center; justify-content: center; font-weight: 700; font-size: 14px;
       border: 1px solid var(--line); background: white; color: inherit; cursor: pointer;
-      font-family: inherit;
+      font-family: inherit; text-decoration: none;
     }
     .btn.primary { color: white; background: var(--blue); border-color: var(--blue); box-shadow: 0 7px 18px rgba(11, 79, 156, .16); }
 
@@ -122,7 +122,7 @@
     .category small { display: block; color: var(--muted); margin-top: 2px; }
 
     .events { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-    .event { overflow: hidden; background: white; border-radius: 14px; border: 1px solid var(--line); box-shadow: 0 8px 28px rgba(16, 42, 67, .06); }
+    .event { overflow: hidden; display: flex; flex-direction: column; background: white; border-radius: 14px; border: 1px solid var(--line); box-shadow: 0 8px 28px rgba(16, 42, 67, .06); }
     .event-cover { height: 140px; padding: 21px; position: relative; display: flex; align-items: flex-end; }
     .event-cover.sport { background: linear-gradient(135deg, #e8f1f8, #a9c8e5); }
     .event-cover.game { background: linear-gradient(135deg, #e9edf4, #aebdd4); }
@@ -130,7 +130,7 @@
     .event-cover.custom { background: linear-gradient(135deg, #e4eef9, #8db4de); }
     .big-icon { position: absolute; right: 20px; top: 13px; font-size: 61px; filter: drop-shadow(0 8px 12px rgba(0,0,0,.08)); }
     .tag { padding: 5px 10px; border-radius: 999px; background: rgba(255,255,255,.78); font-size: 12px; font-weight: 800; }
-    .event-body { padding: 20px; }
+    .event-body { padding: 20px; display: flex; flex: 1; flex-direction: column; }
     .event-body h3 { margin: 0 0 13px; font-size: 19px; }
     .meta { display: grid; gap: 7px; color: var(--muted); font-size: 14px; }
     .meta span b { color: var(--ink); font-weight: 700; }
@@ -138,6 +138,24 @@
     .host { display: flex; align-items: center; gap: 9px; font-size: 13px; color: var(--muted); }
     .host-avatar { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: #edf0f7; }
     .seats { font-size: 13px; color: var(--blue); font-weight: 800; }
+    .event-summary { margin: 13px 0 0; color: #53687c; font-size: 14px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 14px 0 2px; }
+    .chip { padding: 4px 8px; border-radius: 999px; color: #31516f; background: #edf4fa; font-size: 12px; font-weight: 800; }
+    .chip.updated { color: #604300; background: #fff0c7; }
+    .chip.risk { color: #8b1e18; background: #ffe5e2; }
+    .chip.student { color: #154f40; background: #dff5ed; }
+    .info-alert { margin-top: 13px; padding: 10px 11px; border-radius: 9px; background: #fff8e6; color: #71551b; font-size: 13px; }
+    .info-alert.high { background: #fff0ef; color: #8b1e18; }
+    .notice-details { margin-top: 13px; border-top: 1px dashed var(--line); padding-top: 11px; font-size: 13px; }
+    .notice-details summary { color: var(--blue); font-weight: 800; cursor: pointer; }
+    .notice-details p { margin: 8px 0 0; color: var(--muted); }
+    .feed-tools { display: grid; grid-template-columns: 1.5fr repeat(3, minmax(140px, .65fr)); gap: 11px; margin-bottom: 16px; }
+    .feed-tools input, .feed-tools select { min-height: 46px; padding: 0 13px; border: 1px solid var(--line); border-radius: 10px; color: var(--ink); background: white; font: inherit; }
+    .feed-tools input:focus, .feed-tools select:focus { outline: 3px solid rgba(11, 79, 156, .10); border-color: var(--blue); }
+    .feed-meta { display: flex; justify-content: space-between; gap: 16px; margin: 0 0 20px; color: var(--muted); font-size: 13px; }
+    .data-note { padding: 10px 13px; border-radius: 8px; background: #edf4fa; }
+    .empty-feed { grid-column: 1 / -1; padding: 55px 20px; border: 1px dashed #b9cbdc; border-radius: 14px; color: var(--muted); text-align: center; }
+    .category.active { border-color: #7ca1c7; border-top-color: var(--lime); background: #f8fbfe; box-shadow: 0 8px 22px rgba(16, 42, 67, .08); }
 
     .safety {
       margin-top: 64px; display: grid; grid-template-columns: 1fr 1.45fr; gap: 56px;
@@ -194,41 +212,6 @@
     .logout-card button { width: 100%; padding: 9px 10px; border: 0; border-radius: 9px; background: transparent; color: #d93f37; text-align: left; font: inherit; cursor: pointer; }
     .logout-card button:hover { background: #fff1f0; }
 
-    #discover-dialog, #official-dialog { width: min(1080px, calc(100% - 28px)); }
-    .discover-shell { min-height: 650px; }
-    .discover-toolbar { padding: 24px 30px 10px; }
-    .category-tabs { display: flex; gap: 9px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: thin; }
-    .category-tab { flex: 0 0 auto; border: 1px solid var(--line); border-radius: 999px; padding: 9px 15px; background: white; color: #5f6880; font: inherit; font-size: 14px; cursor: pointer; }
-    .category-tab.active { color: white; background: var(--ink); border-color: var(--ink); }
-    .discover-content { padding: 14px 30px 32px; }
-    .activity-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
-    .activity-tile { min-height: 150px; padding: 19px; border: 1px solid var(--line); border-radius: 18px; background: var(--soft); color: var(--ink); text-align: left; font: inherit; cursor: pointer; transition: .2s ease; }
-    .activity-tile:hover { transform: translateY(-3px); border-color: #b8c7ff; background: white; box-shadow: 0 12px 30px rgba(31, 48, 100, .09); }
-    .activity-tile i { display: block; margin-bottom: 18px; font-style: normal; font-size: 32px; }
-    .activity-tile strong { display: block; font-size: 17px; }
-    .activity-tile small { display: block; margin-top: 5px; color: var(--muted); }
-    .discover-back { display: inline-flex; align-items: center; gap: 7px; margin-bottom: 18px; padding: 0; border: 0; background: none; color: var(--blue); font: inherit; font-weight: 800; cursor: pointer; }
-    .groups-heading { display: flex; justify-content: space-between; align-items: end; gap: 20px; margin-bottom: 20px; }
-    .groups-heading h3 { margin: 0; font-size: 25px; }
-    .groups-heading p { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
-    .group-list { display: grid; gap: 13px; }
-    .group-card { display: grid; grid-template-columns: 1fr auto; gap: 20px; padding: 19px 20px; border: 1px solid var(--line); border-radius: 17px; background: white; }
-    .group-top { display: flex; align-items: center; flex-wrap: wrap; gap: 9px; margin-bottom: 10px; }
-    .group-top h4 { margin: 0; font-size: 17px; }
-    .group-badge { padding: 3px 8px; border-radius: 999px; color: #164300; background: #dcffad; font-size: 12px; font-weight: 800; }
-    .group-meta { display: flex; flex-wrap: wrap; gap: 13px; color: var(--muted); font-size: 13px; }
-    .requirement { margin: 12px 0 0; padding: 10px 12px; border-radius: 10px; background: var(--soft); color: #4f5870; font-size: 14px; }
-    .requirement b { color: var(--ink); }
-    .join-box { min-width: 112px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-between; }
-    .join-box strong { color: var(--blue); font-size: 14px; }
-    .join-box .btn { min-height: 37px; padding: 0 14px; }
-    .empty-groups { padding: 60px 20px; border-radius: 18px; background: var(--soft); text-align: center; color: var(--muted); }
-    .official-empty { min-height: 390px; display: grid; place-items: center; padding: 42px 20px; border: 1px dashed #b8c9d9; border-radius: 14px; background: #f7fafc; text-align: center; }
-    .official-empty-inner { max-width: 390px; }
-    .official-empty-icon { width: 64px; height: 64px; margin: 0 auto 18px; display: grid; place-items: center; border-radius: 14px; color: white; background: var(--blue); font-size: 28px; box-shadow: 0 10px 24px rgba(11, 79, 156, .18); }
-    .official-empty h3 { margin: 0 0 8px; font-size: 21px; }
-    .official-empty p { margin: 0; color: var(--muted); font-size: 14px; }
-
     @media (max-width: 900px) {
       .nav-links { display: none; }
       .hero { grid-template-columns: 1fr; gap: 32px; padding-top: 52px; }
@@ -236,6 +219,7 @@
       .categories { grid-template-columns: repeat(3, 1fr); }
       .events { grid-template-columns: 1fr 1fr; }
       .event:last-child { grid-column: 1 / -1; }
+      .feed-tools { grid-template-columns: 1fr 1fr; }
       .safety { grid-template-columns: 1fr; gap: 28px; }
     }
 
@@ -263,10 +247,8 @@
       .modal-head { padding: 23px 20px 17px; }
       .publish-form { padding: 20px; }
       .field-row { grid-template-columns: 1fr; gap: 0; }
-      .discover-toolbar, .discover-content { padding-left: 20px; padding-right: 20px; }
-      .activity-grid { grid-template-columns: repeat(2, 1fr); }
-      .group-card { grid-template-columns: 1fr; }
-      .join-box { flex-direction: row; align-items: center; }
+      .feed-tools { grid-template-columns: 1fr; }
+      .feed-meta { flex-direction: column; }
     }
   </style>
 </head>
@@ -274,7 +256,7 @@
   <header>
     <nav class="shell" aria-label="主导航">
       <div class="brand"><span class="brand-mark">讯</span>校讯拾机</div>
-      <div class="nav-links"><button class="nav-link" type="button" data-open-discover>同学活动</button><button class="nav-link" type="button" data-open-official>官方活动</button><button class="nav-link" type="button" data-open-discover>活动分类</button></div>
+      <div class="nav-links"><button class="nav-link" type="button" data-open-discover>同学活动</button><a class="nav-link" href="official.html">官方活动</a></div>
       <div class="nav-actions">
         <button class="btn" id="login-button" type="button" data-open-auth>登录 / 注册</button>
         <div class="user-menu" id="user-menu" hidden>
@@ -293,27 +275,27 @@
         <h1>在校园，拾起<br><em>每一次机会</em></h1>
         <p class="lead">从社团活动、比赛招募到学习搭子与周末体验，让值得参与的校园信息更容易被看见。</p>
         <div class="hero-actions">
-          <button class="btn primary" type="button" data-open-discover>看看大家在组什么局</button>
-          <button class="btn" type="button" data-open-official>查看官方活动</button>
+          <button class="btn primary" type="button" data-open-discover>浏览校园机会</button>
+          <a class="btn" href="official.html">查看官方活动</a>
         </div>
         <div class="trust">
           <div class="faces"><span class="face">🧑</span><span class="face">👩</span><span class="face">👨</span><span class="face">👩</span></div>
-          <span>本周已有 286 位同学发现校园新机会</span>
+          <span>题目 01—26 已统一整理，缺失与风险信息均如实标注</span>
         </div>
       </div>
 
       <div class="hero-board" aria-label="活动预览">
         <article class="board">
           <div class="board-head">
-            <div><small>本周五 · 18:30</small><strong>一起去看日落吧</strong></div>
-            <span class="status">还差 2 人</span>
+            <div><small>信息更新 · 编号 01 / 09</small><strong>“蓝桥杯”程序设计校内训练营</strong></div>
+            <span class="status">报名中</span>
           </div>
           <div class="route">
-            <div><strong>西门</strong><span>集合出发</span></div>
+            <div><strong>9月21日</strong><span>19:30 首次训练</span></div>
             <div></div>
-            <div class="right"><strong>江堤</strong><span>骑行 8 km</span></div>
+            <div class="right"><strong>A402</strong><span>实验楼</span></div>
           </div>
-          <div class="board-note"><span>🚲 轻松骑行</span><span>已有 4 人参加</span></div>
+          <div class="board-note"><span>💻 零基础可参加</span><span>9月24日22:00截止</span></div>
         </article>
         <div class="sticker one"><span>📌</span>校园活动精选</div>
         <div class="sticker two"><span>🎓</span>新生友好</div>
@@ -323,16 +305,16 @@
     <section class="section soft">
       <div class="shell">
         <div class="section-head">
-          <div><h2>找到你的兴趣场</h2><p>这里展示由同学自主发起的校园活动。</p></div>
+          <div><h2>同学活动分类</h2><p>这里汇总全部非官方活动，并按具体项目类型分类。</p></div>
           <button class="more" type="button" data-open-all>查看全部分类 →</button>
         </div>
         <div class="categories">
-          <button class="category" type="button" data-open-discover data-category="运动搭子"><i>🏸</i><strong>运动搭子</strong><small>42 个组局</small></button>
-          <button class="category" type="button" data-open-discover data-category="一起吃饭"><i>🍜</i><strong>一起吃饭</strong><small>35 个组局</small></button>
-          <button class="category" type="button" data-open-discover data-category="桌游娱乐"><i>🎲</i><strong>桌游娱乐</strong><small>28 个组局</small></button>
-          <button class="category" type="button" data-open-discover data-category="学习自习"><i>📚</i><strong>学习自习</strong><small>19 个组局</small></button>
-          <button class="category" type="button" data-open-discover data-category="兴趣同好"><i>📷</i><strong>兴趣同好</strong><small>31 个组局</small></button>
-          <button class="category" type="button" data-open-discover data-category="周末出行"><i>🌳</i><strong>周末出行</strong><small>16 个组局</small></button>
+          <button class="category" type="button" data-feed-category="比赛挑战"><i>🏆</i><strong>比赛挑战</strong><small data-count-category="比赛挑战">0 项</small></button>
+          <button class="category" type="button" data-feed-category="学习分享"><i>📚</i><strong>学习分享</strong><small data-count-category="学习分享">0 项</small></button>
+          <button class="category" type="button" data-feed-category="项目招募"><i>🧩</i><strong>项目招募</strong><small data-count-category="项目招募">0 项</small></button>
+          <button class="category" type="button" data-feed-category="志愿实践"><i>🤝</i><strong>志愿实践</strong><small data-count-category="志愿实践">0 项</small></button>
+          <button class="category" type="button" data-feed-category="校园活动"><i>📌</i><strong>校园活动</strong><small data-count-category="校园活动">0 项</small></button>
+          <button class="category" type="button" data-feed-category="学生发布"><i>🎒</i><strong>学生发布</strong><small data-count-category="学生发布">0 项</small></button>
         </div>
       </div>
     </section>
@@ -340,35 +322,17 @@
     <section class="section">
       <div class="shell">
         <div class="section-head">
-          <div><h2>同学发起的热门活动</h2><p>和附近的同学，一起把想做的事变成今天的安排。</p></div>
-          <span class="more">发现更多组局 →</span>
+          <div><h2>同学活动</h2><p>全部非官方活动集中展示；以 2026 年 9 月 19 日为统一时间背景。</p></div>
+          <button class="more" type="button" data-open-all>清除筛选 →</button>
         </div>
-        <div class="events" id="event-list">
-          <article class="event">
-            <div class="event-cover sport"><span class="tag">运动 · 羽毛球</span><span class="big-icon">🏸</span></div>
-            <div class="event-body">
-              <h3>下课后轻松打两局</h3>
-              <div class="meta"><span>🗓️ <b>今天 19:00</b></span><span>📍 东区羽毛球馆 3 号场</span></div>
-              <div class="event-foot"><div class="host"><span class="host-avatar">林</span><span>林同学发起</span></div><span class="seats">4 / 6 人</span></div>
-            </div>
-          </article>
-          <article class="event">
-            <div class="event-cover game"><span class="tag">娱乐 · 桌游</span><span class="big-icon">🎲</span></div>
-            <div class="event-body">
-              <h3>新手友好桌游夜</h3>
-              <div class="meta"><span>🗓️ <b>周六 18:30</b></span><span>📍 大学生活动中心 204</span></div>
-              <div class="event-foot"><div class="host"><span class="host-avatar">周</span><span>周同学发起</span></div><span class="seats">5 / 8 人</span></div>
-            </div>
-          </article>
-          <article class="event">
-            <div class="event-cover food"><span class="tag">美食 · 聚餐</span><span class="big-icon">🍲</span></div>
-            <div class="event-body">
-              <h3>校门口火锅拼桌</h3>
-              <div class="meta"><span>🗓️ <b>周五 20:00</b></span><span>📍 南门集合 · 预计人均 65 元</span></div>
-              <div class="event-foot"><div class="host"><span class="host-avatar">陈</span><span>陈同学发起</span></div><span class="seats">3 / 5 人</span></div>
-            </div>
-          </article>
+        <div class="feed-tools" aria-label="活动搜索和筛选">
+          <input id="search-input" type="search" placeholder="搜索活动、地点、对象或条件">
+          <select id="category-filter" aria-label="按活动类型筛选"><option value="all">全部类型</option><option>比赛挑战</option><option>学习分享</option><option>项目招募</option><option>志愿实践</option><option>校园活动</option><option>学生发布</option></select>
+          <select id="status-filter" aria-label="按状态筛选"><option value="all">全部状态</option><option value="today">今日活动</option><option value="closing">即将截止</option><option value="open">报名中</option><option value="long_term">长期招募/有效</option><option value="replay">等待回放</option><option value="waitlist">可候补</option><option value="uncertain">信息待确认</option><option value="updated">信息已更新</option><option value="risk">风险信息</option><option value="commercial">疑似推广</option></select>
+          <select id="audience-filter" aria-label="按适合人群筛选"><option value="all">全部人群</option><option value="newcomer">新生友好</option><option value="student">学生个人发布</option></select>
         </div>
+        <div class="feed-meta"><span id="result-count">正在载入活动…</span><span class="data-note">官方活动已单独收录在“官方活动”子页面</span></div>
+        <div class="events" id="event-list"></div>
 
         <section class="safety">
           <div>
@@ -411,48 +375,6 @@
         <button class="btn primary auth-submit" type="submit">创建账号并登录</button>
         <p class="auth-switch">已有账号？<button type="button" data-auth-switch="login">返回登录</button></p>
       </form>
-    </div>
-  </dialog>
-
-  <dialog id="discover-dialog" aria-labelledby="discover-title">
-    <div class="discover-shell">
-      <div class="modal-head">
-        <div><h2 id="discover-title">发现活动</h2><p>先选择想参加的活动，再查看同学们发布的组局。</p></div>
-        <button class="close-btn" type="button" aria-label="关闭查找窗口" data-close-discover>×</button>
-      </div>
-      <div id="activity-view">
-        <div class="discover-toolbar"><div class="category-tabs" id="category-tabs"></div></div>
-        <div class="discover-content"><div class="activity-grid" id="activity-grid"></div></div>
-      </div>
-      <div class="discover-content" id="group-view" hidden>
-        <button class="discover-back" type="button" id="back-to-activities">← 返回活动集合</button>
-        <div class="groups-heading"><div><h3 id="selected-activity-title"></h3><p id="selected-activity-copy"></p></div><button class="btn primary" type="button" data-open-publish>发布这个组局</button></div>
-        <div class="group-list" id="group-list"></div>
-      </div>
-    </div>
-  </dialog>
-
-  <dialog id="official-dialog" aria-labelledby="official-title">
-    <div class="discover-shell">
-      <div class="modal-head">
-        <div><h2 id="official-title">官方活动</h2><p>查看由学校或学院发布的正式校园活动。</p></div>
-        <button class="close-btn" type="button" aria-label="关闭官方活动窗口" data-close-official>×</button>
-      </div>
-      <div class="discover-toolbar">
-        <div class="category-tabs" aria-label="官方活动级别">
-          <button class="category-tab active" type="button" data-official-scope="school">校级活动</button>
-          <button class="category-tab" type="button" data-official-scope="college">院级活动</button>
-        </div>
-      </div>
-      <div class="discover-content">
-        <div class="official-empty">
-          <div class="official-empty-inner">
-            <div class="official-empty-icon">校</div>
-            <h3 id="official-empty-title">暂无校级活动</h3>
-            <p id="official-empty-copy">官方活动将在学校确认并发布后显示在这里。</p>
-          </div>
-        </div>
-      </div>
     </div>
   </dialog>
 
@@ -519,10 +441,9 @@
   <footer>
     <div class="shell footer-inner"><span>© 2026 校讯拾机 · 校园活动与机会平台</span><span>不错过校园里的每一次可能</span></div>
   </footer>
+  <script src="data.js"></script>
   <script>
     const publishDialog = document.getElementById('publish-dialog');
-    const discoverDialog = document.getElementById('discover-dialog');
-    const officialDialog = document.getElementById('official-dialog');
     const authDialog = document.getElementById('auth-dialog');
     const form = document.getElementById('publish-form');
     const loginForm = document.getElementById('login-form');
@@ -530,67 +451,156 @@
     const timeInput = document.getElementById('activity-time');
     const eventList = document.getElementById('event-list');
     const toast = document.getElementById('publish-toast');
+    const searchInput = document.getElementById('search-input');
+    const categoryFilter = document.getElementById('category-filter');
+    const statusFilter = document.getElementById('status-filter');
+    const audienceFilter = document.getElementById('audience-filter');
     const storageKey = 'coujuer-published-events';
     const usersKey = 'coujuer-users';
     const sessionKey = 'coujuer-session';
     let currentUser = null;
     let publishAfterLogin = false;
 
-    const activityCatalog = {
-      '运动搭子': [['羽毛球', '🏸', 12], ['篮球', '🏀', 9], ['夜跑', '🏃', 7], ['飞盘', '🥏', 6], ['乒乓球', '🏓', 8], ['健身', '💪', 5]],
-      '一起吃饭': [['火锅拼桌', '🍲', 8], ['食堂搭子', '🍚', 11], ['探店', '🍜', 6], ['甜品下午茶', '🍰', 5], ['烧烤', '🍢', 4], ['早餐搭子', '🥪', 3]],
-      '桌游娱乐': [['桌游局', '🎲', 10], ['剧本杀', '🕵️', 6], ['狼人杀', '🐺', 7], ['KTV', '🎤', 5], ['电影', '🎬', 4], ['电竞开黑', '🎮', 9]],
-      '学习自习': [['图书馆自习', '📚', 9], ['英语口语', '🗣️', 5], ['考研搭子', '✍️', 4], ['编程交流', '💻', 6], ['期末复习', '📝', 7], ['论文互助', '📖', 3]],
-      '兴趣同好': [['摄影扫街', '📷', 7], ['吉他弹唱', '🎸', 4], ['绘画', '🎨', 5], ['读书会', '📖', 6], ['汉服同好', '👘', 3], ['宠物交流', '🐾', 6]],
-      '周末出行': [['城市骑行', '🚲', 6], ['公园野餐', '🧺', 5], ['爬山徒步', '🥾', 7], ['看日落', '🌇', 4], ['逛展', '🖼️', 3], ['近郊露营', '⛺', 4]]
+    const categoryStyle = {
+      '比赛挑战': ['game', '🏆'], '学习分享': ['custom', '📚'], '项目招募': ['custom', '🧩'],
+      '志愿实践': ['food', '🤝'], '校园活动': ['sport', '📌'], '学生发布': ['sport', '🎒']
     };
 
-    const groupSamples = {
-      '羽毛球': [
-        { title: '下课后轻松打两局', host: '林同学', time: '今天 19:00', location: '东区羽毛球馆 3 号场', joined: 4, total: 6, requirement: '新手友好，自带球拍；迟到请提前在群里说明。' },
-        { title: '周末羽毛球进阶局', host: '王同学', time: '周六 15:00', location: '北体育馆', joined: 3, total: 4, requirement: '有半年以上球龄，能连续对打；场地费 AA。' }
-      ],
-      '火锅拼桌': [
-        { title: '南门火锅拼桌', host: '陈同学', time: '周五 20:00', location: '南门集合', joined: 3, total: 5, requirement: '人均约 65 元，能吃辣；临时有事请至少提前两小时说。' },
-        { title: '清汤锅也快乐', host: '许同学', time: '周日 18:00', location: '万象城海底捞', joined: 2, total: 6, requirement: '口味清淡局，不劝酒；费用现场 AA。' }
-      ],
-      '桌游局': [
-        { title: '新手友好桌游夜', host: '周同学', time: '周六 18:30', location: '学生活动中心 204', joined: 5, total: 8, requirement: '不会玩没关系，会现场教学；请守时并完整参加一轮。' },
-        { title: '策略桌游下午场', host: '赵同学', time: '周日 14:00', location: '东区咖啡厅', joined: 3, total: 5, requirement: '计划玩卡坦岛和璀璨宝石，饮品自行购买。' }
-      ],
-      '图书馆自习': [
-        { title: '期末安静自习搭子', host: '顾同学', time: '明天 09:00', location: '图书馆三楼东区', joined: 3, total: 6, requirement: '以安静学习为主，每 90 分钟一起休息十分钟。' },
-        { title: '早起自习打卡', host: '刘同学', time: '周一 07:30', location: '图书馆一楼', joined: 2, total: 4, requirement: '连续打卡五天，迟到需在群里报备。' }
-      ],
-      '摄影扫街': [
-        { title: '老街人文摄影', host: '沈同学', time: '周六 16:00', location: '学校西门集合', joined: 4, total: 6, requirement: '手机或相机均可，尊重被摄者，不进行冒犯性拍摄。' },
-        { title: '校园蓝调时刻', host: '唐同学', time: '周三 18:10', location: '钟楼前', joined: 2, total: 5, requirement: '自带拍摄设备，预计活动 90 分钟。' }
-      ],
-      '城市骑行': [
-        { title: '江堤日落骑行', host: '苏同学', time: '周五 18:30', location: '西门集合', joined: 4, total: 6, requirement: '骑行约 8 公里，自备单车和头盔，平均速度 15km/h。' },
-        { title: '周末城市慢骑', host: '方同学', time: '周日 09:00', location: '北门地铁站', joined: 3, total: 8, requirement: '新手可参加，全程约 15 公里，途中会休息。' }
-      ]
-    };
-
-    const typeStyle = {
-      '运动健身': ['sport', '🏸'], '一起吃饭': ['food', '🍲'], '桌游娱乐': ['game', '🎲'],
-      '学习自习': ['custom', '📚'], '兴趣交流': ['custom', '📷'], '周末出行': ['sport', '🌳'], '其他活动': ['custom', '✨']
-    };
-
-    function setMinimumTime() {
-      const now = new Date(Date.now() - new Date().getTimezoneOffset() * 60000);
-      timeInput.min = now.toISOString().slice(0, 16);
+    function escapeHTML(value) {
+      return String(value ?? '').replace(/[&<>'"]/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
     }
 
+    function getReferenceNow() {
+      const now = new Date();
+      const localDay = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+      return localDay === window.CAMPUS_DATA_REFERENCE_DATE ? now : new Date('2026-09-19T12:00:00+08:00');
+    }
+
+    function formatTime(value) {
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return value || '未提供';
+      return new Intl.DateTimeFormat('zh-CN', { month: 'numeric', day: 'numeric', weekday: 'short', hour: '2-digit', minute: '2-digit' }).format(date);
+    }
+
+    function getPublishedEvents() {
+      try { return JSON.parse(localStorage.getItem(storageKey) || '[]'); } catch (_) { return []; }
+    }
+
+    function normalizePublished(item, index) {
+      const hasNote = Boolean((item.note || '').trim());
+      const itemDay = String(item.time || '').slice(0, 10);
+      const codes = ['student'];
+      const tags = ['学生个人发布'];
+      if (itemDay === window.CAMPUS_DATA_REFERENCE_DATE) { codes.push('today'); tags.push('今日活动'); }
+      if (!hasNote) { codes.push('uncertain'); tags.push('信息待确认'); }
+      return {
+        id: `local-${index}-${item.time || ''}`, originalIds: [], title: item.title, category: '学生发布', recordKind: item.type || '学生组局',
+        sourceType: 'student', sourceLabel: '学生个人发布', studentPublished: true, official: false,
+        timeText: formatTime(item.time), start: item.time, location: item.location || '未提供',
+        audience: `${item.size || '未注明'}人局 · ${item.gender || '无性别限制'}`,
+        conditions: hasNote ? item.note : '未填写补充说明', newcomerFriendly: false,
+        summary: hasNote ? item.note : `由${item.host || '学生用户'}发布的自主活动。`,
+        statusTags: tags, statusCodes: codes, completeness: hasNote ? '基础信息已填写' : '部分信息缺失',
+        missing: hasNote ? [] : ['费用、集合方式或其他参与条件'], riskLevel: 'caution', riskLabel: '学生个人发布，参与前请核实',
+        host: item.host || '学生用户', size: item.size, notices: []
+      };
+    }
+
+    function withTimeStatus(item) {
+      const copy = { ...item, statusTags: [...(item.statusTags || [])], statusCodes: [...(item.statusCodes || [])] };
+      if (!copy.statusCodes.includes('time_sensitive') || !copy.start) return copy;
+      const now = getReferenceNow();
+      const start = new Date(copy.start);
+      const end = copy.end ? new Date(copy.end) : null;
+      copy.statusTags = copy.statusTags.filter(tag => !['即将开始', '进行中', '已结束'].includes(tag));
+      if (now < start) copy.statusTags.push('即将开始');
+      else if (!end || now <= end) copy.statusTags.push('进行中');
+      else copy.statusTags.push('已结束');
+      return copy;
+    }
+
+    function allFeedItems() {
+      const builtIn = (window.CAMPUS_ACTIVITIES || []).filter(item => !item.official);
+      return [...getPublishedEvents().map(normalizePublished), ...builtIn].map(withTimeStatus);
+    }
+
+    function chipClass(item, tag) {
+      if (item.riskLevel === 'high' || tag.includes('风险') || tag.includes('商业')) return 'risk';
+      if (item.studentPublished) return 'student';
+      if (tag.includes('更新')) return 'updated';
+      return '';
+    }
+
+    function renderCard(item) {
+      const style = categoryStyle[item.category] || categoryStyle['校园活动'];
+      const missing = item.missing || [];
+      const riskClass = item.riskLevel === 'high' ? ' high' : '';
+      const alertParts = [];
+      if (item.riskLabel) alertParts.push(`<b>${escapeHTML(item.riskLabel)}</b>`);
+      if (missing.length) alertParts.push(`缺失/待确认：${escapeHTML(missing.join('、'))}`);
+      const notices = (item.notices || []).map(notice => `<p><b>${escapeHTML(notice.id)} · ${escapeHTML(notice.type)}：</b>${escapeHTML(notice.text)}</p>`).join('');
+      const sourceInitial = item.studentPublished ? '生' : '讯';
+      const footerRight = item.studentPublished && item.size ? `计划 ${escapeHTML(item.size)} 人` : `编号 ${escapeHTML((item.originalIds || []).join(' / ') || '用户发布')}`;
+      return `<article class="event" data-id="${escapeHTML(item.id)}">
+        <div class="event-cover ${style[0]}"><span class="tag">${escapeHTML(item.category)} · ${escapeHTML(item.recordKind)}</span><span class="big-icon">${style[1]}</span></div>
+        <div class="event-body">
+          <h3>${escapeHTML(item.title)}</h3>
+          <div class="meta">
+            <span>🗓️ <b>${escapeHTML(item.timeText || '未提供')}</b>${item.deadlineText ? ` · 截止 ${escapeHTML(item.deadlineText)}` : ''}</span>
+            <span>📍 ${escapeHTML(item.location || '未提供')}</span>
+            <span>👥 <b>${escapeHTML(item.audience || '未明确')}</b></span>
+            <span>📋 ${escapeHTML(item.conditions || '未提供')}</span>
+          </div>
+          <p class="event-summary">${escapeHTML(item.summary || '')}</p>
+          <div class="chips">${(item.statusTags || []).map(tag => `<span class="chip ${chipClass(item, tag)}">${escapeHTML(tag)}</span>`).join('')}</div>
+          ${alertParts.length ? `<div class="info-alert${riskClass}">${alertParts.join('；')}</div>` : ''}
+          ${notices ? `<details class="notice-details"><summary>查看原通知与更新关系</summary>${item.updateSummary ? `<p><b>变更摘要：</b>${escapeHTML(item.updateSummary)}</p>` : ''}${notices}</details>` : ''}
+          <div class="event-foot"><div class="host"><span class="host-avatar">${sourceInitial}</span><span>${escapeHTML(item.sourceLabel || '来源未明确')}</span></div><span class="seats">${footerRight}</span></div>
+        </div>
+      </article>`;
+    }
+
+    function matchesFilters(item) {
+      const query = searchInput.value.trim().toLowerCase();
+      const haystack = [item.title, item.category, item.recordKind, item.location, item.audience, item.conditions, item.summary, item.sourceLabel, ...(item.statusTags || [])].join(' ').toLowerCase();
+      const categoryOK = categoryFilter.value === 'all' || item.category === categoryFilter.value;
+      const status = statusFilter.value;
+      const statusOK = status === 'all' || (status === 'risk' ? item.riskLevel === 'high' : (item.statusCodes || []).includes(status));
+      const audience = audienceFilter.value;
+      const audienceOK = audience === 'all' || (audience === 'newcomer' && item.newcomerFriendly) || (audience === 'student' && item.studentPublished);
+      return (!query || haystack.includes(query)) && categoryOK && statusOK && audienceOK;
+    }
+
+    function updateCategoryCounts(items) {
+      document.querySelectorAll('[data-count-category]').forEach(node => {
+        const category = node.dataset.countCategory;
+        node.textContent = `${items.filter(item => item.category === category).length} 项`;
+      });
+      document.querySelectorAll('[data-feed-category]').forEach(button => button.classList.toggle('active', categoryFilter.value === button.dataset.feedCategory));
+    }
+
+    function renderFeed() {
+      const items = allFeedItems();
+      const filtered = items.filter(matchesFilters);
+      updateCategoryCounts(items);
+      document.getElementById('result-count').textContent = `共 ${items.length} 条，当前显示 ${filtered.length} 条`;
+      eventList.innerHTML = filtered.length ? filtered.map(renderCard).join('') : '<div class="empty-feed">没有找到符合条件的活动，试试清除筛选或更换关键词。</div>';
+    }
+
+    function clearFilters(scroll = true) {
+      searchInput.value = '';
+      categoryFilter.value = 'all';
+      statusFilter.value = 'all';
+      audienceFilter.value = 'all';
+      renderFeed();
+      if (scroll) document.getElementById('event-list').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function setMinimumTime() { timeInput.min = `${window.CAMPUS_DATA_REFERENCE_DATE}T00:00`; }
+
     function openPublish() {
-      if (!currentUser) {
-        publishAfterLogin = true;
-        if (discoverDialog.open) discoverDialog.close();
-        openAuth('login');
-        return;
-      }
+      if (!currentUser) { publishAfterLogin = true; openAuth('login'); return; }
       setMinimumTime();
-      if (discoverDialog.open) discoverDialog.close();
       publishDialog.showModal();
       setTimeout(() => document.getElementById('activity-title').focus(), 0);
     }
@@ -601,252 +611,82 @@
       return Array.from(new Uint8Array(digest)).map(value => value.toString(16).padStart(2, '0')).join('');
     }
 
-    function getUsers() {
-      try { return JSON.parse(localStorage.getItem(usersKey) || '[]'); } catch (_) { return []; }
-    }
-
-    function showToast(message) {
-      toast.textContent = message;
-      toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 2200);
-    }
+    function getUsers() { try { return JSON.parse(localStorage.getItem(usersKey) || '[]'); } catch (_) { return []; } }
+    function showToast(message) { toast.textContent = message; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 2200); }
 
     function switchAuthMode(mode) {
       const isLogin = mode === 'login';
-      loginForm.hidden = !isLogin;
-      registerForm.hidden = isLogin;
+      loginForm.hidden = !isLogin; registerForm.hidden = isLogin;
       document.getElementById('auth-title').textContent = isLogin ? '登录校讯拾机' : '注册校讯拾机';
       document.getElementById('auth-description').textContent = isLogin ? '登录后即可发布和管理自己的组局。' : '创建账号，发现更多校园活动与机会。';
-      document.getElementById('login-error').textContent = '';
-      document.getElementById('register-error').textContent = '';
+      document.getElementById('login-error').textContent = ''; document.getElementById('register-error').textContent = '';
       if (!isLogin && !document.getElementById('register-email').value) document.getElementById('register-email').value = document.getElementById('login-email').value;
       if (isLogin && !document.getElementById('login-email').value) document.getElementById('login-email').value = document.getElementById('register-email').value;
     }
 
     function openAuth(mode = 'login') {
-      switchAuthMode(mode);
-      authDialog.showModal();
+      switchAuthMode(mode); authDialog.showModal();
       const field = mode === 'login' ? document.getElementById('login-email') : document.getElementById('register-name');
       setTimeout(() => field.focus(), 0);
     }
 
     function updateAuthUI() {
-      const loginButton = document.getElementById('login-button');
-      const userMenu = document.getElementById('user-menu');
-      loginButton.hidden = Boolean(currentUser);
-      userMenu.hidden = !currentUser;
-      if (currentUser) {
-        document.getElementById('user-name').textContent = currentUser.nickname;
-        document.getElementById('user-avatar').textContent = currentUser.nickname.slice(0, 1);
-      }
+      document.getElementById('login-button').hidden = Boolean(currentUser);
+      document.getElementById('user-menu').hidden = !currentUser;
+      if (currentUser) { document.getElementById('user-name').textContent = currentUser.nickname; document.getElementById('user-avatar').textContent = currentUser.nickname.slice(0, 1); }
     }
 
     function completeLogin(user, message) {
       currentUser = { email: user.email, nickname: user.nickname };
-      localStorage.setItem(sessionKey, JSON.stringify(currentUser));
-      updateAuthUI();
-      authDialog.close();
-      loginForm.reset();
-      registerForm.reset();
-      showToast(message);
-      if (publishAfterLogin) {
-        publishAfterLogin = false;
-        setTimeout(openPublish, 280);
-      }
+      localStorage.setItem(sessionKey, JSON.stringify(currentUser)); updateAuthUI(); authDialog.close(); loginForm.reset(); registerForm.reset(); showToast(message);
+      if (publishAfterLogin) { publishAfterLogin = false; setTimeout(openPublish, 280); }
     }
 
-    function loadSession() {
-      try { currentUser = JSON.parse(localStorage.getItem(sessionKey) || 'null'); } catch (_) { currentUser = null; }
-      updateAuthUI();
-    }
+    function loadSession() { try { currentUser = JSON.parse(localStorage.getItem(sessionKey) || 'null'); } catch (_) { currentUser = null; } updateAuthUI(); }
 
-    function getGroups(activity, category) {
-      if (groupSamples[activity]) return groupSamples[activity];
-      return [
-        { title: `一起参加${activity}`, host: '李同学', time: '本周六 14:00', location: '大学生活动中心', joined: 2, total: 6, requirement: '新手友好，准时到场；具体集合位置会在组局群内通知。' },
-        { title: `${activity}同好小聚`, host: '吴同学', time: '本周日 10:00', location: '校园中心广场', joined: 3, total: 5, requirement: `对${activity}感兴趣即可参加，费用如有产生则现场 AA。` }
-      ];
-    }
-
-    let activeCategory = Object.keys(activityCatalog)[0];
-    let showingAllActivities = false;
-
-    function renderCategoryTabs() {
-      const tabs = document.getElementById('category-tabs');
-      tabs.innerHTML = Object.keys(activityCatalog).map(category => `<button class="category-tab ${category === activeCategory ? 'active' : ''}" type="button" data-discover-category="${category}">${category}</button>`).join('');
-      tabs.querySelectorAll('[data-discover-category]').forEach(button => button.addEventListener('click', () => {
-        activeCategory = button.dataset.discoverCategory;
-        renderCategoryTabs();
-        renderActivities();
-      }));
-    }
-
-    function renderActivities() {
-      const grid = document.getElementById('activity-grid');
-      const activities = showingAllActivities
-        ? Object.values(activityCatalog).flat()
-        : activityCatalog[activeCategory];
-      grid.innerHTML = activities.map(([name, icon, count]) => `
-        <button class="activity-tile" type="button" data-activity="${name}">
-          <i>${icon}</i><strong>${name}</strong><small>${count} 个组局正在进行</small>
-        </button>`).join('');
-      grid.querySelectorAll('[data-activity]').forEach(button => button.addEventListener('click', () => showGroups(button.dataset.activity)));
-    }
-
-    function openDiscover(category, showAll = false) {
-      showingAllActivities = showAll;
-      activeCategory = activityCatalog[category] ? category : Object.keys(activityCatalog)[0];
-      document.getElementById('activity-view').hidden = false;
-      document.getElementById('group-view').hidden = true;
-      document.querySelector('.discover-toolbar').hidden = showAll;
-      document.getElementById('discover-title').textContent = showAll ? '全部活动' : '发现活动';
-      if (!showAll) renderCategoryTabs();
-      renderActivities();
-      discoverDialog.showModal();
-    }
-
-    function showOfficialScope(scope) {
-      const isSchool = scope === 'school';
-      document.querySelectorAll('[data-official-scope]').forEach(button => button.classList.toggle('active', button.dataset.officialScope === scope));
-      document.getElementById('official-empty-title').textContent = isSchool ? '暂无校级活动' : '暂无院级活动';
-      document.getElementById('official-empty-copy').textContent = isSchool
-        ? '官方活动将在学校确认并发布后显示在这里。'
-        : '官方活动将在学院确认并发布后显示在这里。';
-      document.querySelector('.official-empty-icon').textContent = isSchool ? '校' : '院';
-    }
-
-    function openOfficial() {
-      showOfficialScope('school');
-      officialDialog.showModal();
-    }
-
-    function showGroups(activity) {
-      document.getElementById('activity-view').hidden = true;
-      document.getElementById('group-view').hidden = false;
-      document.getElementById('selected-activity-title').textContent = activity;
-      document.getElementById('selected-activity-copy').textContent = showingAllActivities ? '查看同学们发布的组局与参与要求' : `${activeCategory} · 看看同学们发布的组局与参与要求`;
-      const groups = getGroups(activity, activeCategory);
-      document.getElementById('group-list').innerHTML = groups.map(group => `
-        <article class="group-card">
-          <div>
-            <div class="group-top"><h4>${escapeHTML(group.title)}</h4><span class="group-badge">招募中</span></div>
-            <div class="group-meta"><span>👤 ${escapeHTML(group.host)}发起</span><span>🗓️ ${escapeHTML(group.time)}</span><span>📍 ${escapeHTML(group.location)}</span></div>
-            <p class="requirement"><b>组局要求：</b>${escapeHTML(group.requirement)}</p>
-          </div>
-          <div class="join-box"><strong>${group.joined} / ${group.total} 人</strong><button class="btn primary" type="button">查看组局</button></div>
-        </article>`).join('');
-    }
-
-    function formatTime(value) {
-      const date = new Date(value);
-      return new Intl.DateTimeFormat('zh-CN', { month: 'numeric', day: 'numeric', weekday: 'short', hour: '2-digit', minute: '2-digit' }).format(date);
-    }
-
-    function escapeHTML(value) {
-      return String(value).replace(/[&<>'"]/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
-    }
-
-    function renderEvent(item, prepend = false) {
-      const style = typeStyle[item.type] || typeStyle['其他活动'];
-      const gender = item.gender || '无性别限制';
-      const card = document.createElement('article');
-      card.className = 'event';
-      card.innerHTML = `
-        <div class="event-cover ${style[0]}"><span class="tag">${escapeHTML(item.type)} · 新发布</span><span class="big-icon">${style[1]}</span></div>
-        <div class="event-body">
-          <h3>${escapeHTML(item.title)}</h3>
-          <div class="meta"><span>🗓️ <b>${escapeHTML(formatTime(item.time))}</b></span><span>📍 ${escapeHTML(item.location)}</span><span>👥 <b>${escapeHTML(gender)}</b></span>${item.note ? `<span>💬 ${escapeHTML(item.note)}</span>` : ''}</div>
-          <div class="event-foot"><div class="host"><span class="host-avatar">${escapeHTML((item.host || '我').slice(0, 1))}</span><span>${escapeHTML(item.host || '我')}发起</span></div><span class="seats">1 / ${escapeHTML(item.size)} 人</span></div>
-        </div>`;
-      prepend ? eventList.prepend(card) : eventList.append(card);
-    }
-
-    function loadPublishedEvents() {
-      try { JSON.parse(localStorage.getItem(storageKey) || '[]').forEach(item => renderEvent(item)); } catch (_) {}
-    }
-
+    [searchInput, categoryFilter, statusFilter, audienceFilter].forEach(control => control.addEventListener(control === searchInput ? 'input' : 'change', renderFeed));
+    document.querySelectorAll('[data-feed-category]').forEach(button => button.addEventListener('click', () => {
+      categoryFilter.value = button.dataset.feedCategory; renderFeed(); document.getElementById('event-list').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }));
+    document.querySelectorAll('[data-open-discover]').forEach(button => button.addEventListener('click', () => clearFilters(true)));
+    document.querySelectorAll('[data-open-all]').forEach(button => button.addEventListener('click', () => clearFilters(true)));
     document.querySelectorAll('[data-open-publish]').forEach(button => button.addEventListener('click', openPublish));
     document.querySelectorAll('[data-close-publish]').forEach(button => button.addEventListener('click', () => publishDialog.close()));
     publishDialog.addEventListener('click', event => { if (event.target === publishDialog) publishDialog.close(); });
-    document.querySelectorAll('[data-open-discover]').forEach(button => button.addEventListener('click', () => openDiscover(button.dataset.category)));
-    document.querySelectorAll('[data-open-official]').forEach(button => button.addEventListener('click', openOfficial));
-    document.querySelector('[data-open-all]').addEventListener('click', () => openDiscover(null, true));
-    document.querySelector('[data-close-discover]').addEventListener('click', () => discoverDialog.close());
-    discoverDialog.addEventListener('click', event => { if (event.target === discoverDialog) discoverDialog.close(); });
-    document.querySelector('[data-close-official]').addEventListener('click', () => officialDialog.close());
-    officialDialog.addEventListener('click', event => { if (event.target === officialDialog) officialDialog.close(); });
-    document.querySelectorAll('[data-official-scope]').forEach(button => button.addEventListener('click', () => showOfficialScope(button.dataset.officialScope)));
-    document.getElementById('back-to-activities').addEventListener('click', () => {
-      document.getElementById('activity-view').hidden = false;
-      document.getElementById('group-view').hidden = true;
-    });
-
     document.querySelectorAll('[data-open-auth]').forEach(button => button.addEventListener('click', () => openAuth('login')));
     document.querySelector('[data-close-auth]').addEventListener('click', () => { publishAfterLogin = false; authDialog.close(); });
     authDialog.addEventListener('click', event => { if (event.target === authDialog) { publishAfterLogin = false; authDialog.close(); } });
-    document.querySelectorAll('[data-auth-switch]').forEach(button => button.addEventListener('click', () => {
-      const mode = button.dataset.authSwitch;
-      switchAuthMode(mode);
-      const field = mode === 'login' ? document.getElementById('login-email') : document.getElementById('register-name');
-      setTimeout(() => field.focus(), 0);
-    }));
+    document.querySelectorAll('[data-auth-switch]').forEach(button => button.addEventListener('click', () => { switchAuthMode(button.dataset.authSwitch); }));
 
     loginForm.addEventListener('submit', async event => {
-      event.preventDefault();
-      const data = Object.fromEntries(new FormData(loginForm));
-      const passwordHash = await hashPassword(data.password);
+      event.preventDefault(); const data = Object.fromEntries(new FormData(loginForm)); const passwordHash = await hashPassword(data.password);
       const user = getUsers().find(item => item.email.toLowerCase() === data.email.trim().toLowerCase() && item.passwordHash === passwordHash);
-      if (!user) {
-        document.getElementById('login-error').textContent = '邮箱或密码不正确，请重新输入。';
-        return;
-      }
+      if (!user) { document.getElementById('login-error').textContent = '邮箱或密码不正确，请重新输入。'; return; }
       completeLogin(user, `欢迎回来，${user.nickname}`);
     });
 
     registerForm.addEventListener('submit', async event => {
-      event.preventDefault();
-      const data = Object.fromEntries(new FormData(registerForm));
-      const error = document.getElementById('register-error');
+      event.preventDefault(); const data = Object.fromEntries(new FormData(registerForm)); const error = document.getElementById('register-error');
       if (data.password !== data.confirm) { error.textContent = '两次输入的密码不一致。'; return; }
-      const users = getUsers();
-      const email = data.email.trim().toLowerCase();
+      const users = getUsers(); const email = data.email.trim().toLowerCase();
       if (users.some(item => item.email.toLowerCase() === email)) { error.textContent = '该邮箱已经注册，请直接登录。'; return; }
       const user = { nickname: data.nickname.trim(), email, passwordHash: await hashPassword(data.password) };
-      users.push(user);
-      localStorage.setItem(usersKey, JSON.stringify(users));
-      completeLogin(user, `注册成功，欢迎你，${user.nickname}`);
+      users.push(user); localStorage.setItem(usersKey, JSON.stringify(users)); completeLogin(user, `注册成功，欢迎你，${user.nickname}`);
     });
 
-    document.getElementById('user-chip').addEventListener('click', () => {
-      const card = document.getElementById('logout-card');
-      card.hidden = !card.hidden;
-    });
-    document.getElementById('logout-button').addEventListener('click', () => {
-      localStorage.removeItem(sessionKey);
-      currentUser = null;
-      document.getElementById('logout-card').hidden = true;
-      updateAuthUI();
-      showToast('已退出登录');
-    });
+    document.getElementById('user-chip').addEventListener('click', () => { const card = document.getElementById('logout-card'); card.hidden = !card.hidden; });
+    document.getElementById('logout-button').addEventListener('click', () => { localStorage.removeItem(sessionKey); currentUser = null; document.getElementById('logout-card').hidden = true; updateAuthUI(); showToast('已退出登录'); });
 
     form.addEventListener('submit', event => {
-      event.preventDefault();
-      if (!form.reportValidity()) return;
-      const data = Object.fromEntries(new FormData(form));
-      data.host = currentUser.nickname;
-      const items = JSON.parse(localStorage.getItem(storageKey) || '[]');
-      items.unshift(data);
-      localStorage.setItem(storageKey, JSON.stringify(items.slice(0, 20)));
-      renderEvent(data, true);
-      form.reset();
-      publishDialog.close();
-      showToast('组局发布成功');
-      document.getElementById('event-list').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      event.preventDefault(); if (!form.reportValidity()) return;
+      const data = Object.fromEntries(new FormData(form)); data.host = currentUser.nickname;
+      const items = getPublishedEvents(); items.unshift(data); localStorage.setItem(storageKey, JSON.stringify(items.slice(0, 20)));
+      form.reset(); publishDialog.close(); categoryFilter.value = '学生发布'; statusFilter.value = 'all'; audienceFilter.value = 'all'; searchInput.value = ''; renderFeed(); showToast('组局发布成功');
+      eventList.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
 
     loadSession();
-    loadPublishedEvents();
+    renderFeed();
   </script>
 </body>
 </html>
-

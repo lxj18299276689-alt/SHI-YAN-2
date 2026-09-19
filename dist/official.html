@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="校讯拾机官方活动——查看学校和学院发布的正式校园活动。">
+  <title>官方活动 · 校讯拾机</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b3a75'/%3E%3Cpath d='M15 18h34v30H15z' fill='white'/%3E%3Cpath d='M21 25h22M21 32h16M21 39h19' stroke='%230b3a75' stroke-width='4' stroke-linecap='round'/%3E%3Cpath d='M43 14v12' stroke='%23f2b84b' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E">
+  <style>
+    :root {
+      --ink: #102a43;
+      --muted: #66788a;
+      --line: #dce6ef;
+      --paper: #ffffff;
+      --soft: #f3f7fb;
+      --blue: #0b4f9c;
+      --gold: #f2b84b;
+      --shadow: 0 16px 44px rgba(16, 42, 67, .10);
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; color: var(--ink); background: #f5f9fc; font-family: "Microsoft YaHei", "PingFang SC", system-ui, -apple-system, sans-serif; line-height: 1.6; }
+    .shell { width: min(1120px, calc(100% - 40px)); margin: 0 auto; }
+    header { height: 78px; display: flex; align-items: center; border-top: 4px solid var(--blue); border-bottom: 1px solid var(--line); background: rgba(255,255,255,.96); }
+    nav { display: flex; align-items: center; justify-content: space-between; gap: 28px; }
+    .brand { display: flex; align-items: center; gap: 11px; color: var(--ink); font-size: 21px; font-weight: 900; letter-spacing: .02em; text-decoration: none; }
+    .brand-mark { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 9px; border-bottom: 4px solid var(--gold); color: white; background: var(--blue); font-size: 18px; box-shadow: 0 7px 18px rgba(11,79,156,.20); }
+    .nav-links { display: flex; gap: 30px; align-items: center; }
+    .nav-link { color: #55687a; text-decoration: none; font-size: 15px; }
+    .nav-link.active { color: var(--blue); font-weight: 800; }
+    .back-home { min-height: 42px; padding: 0 18px; display: inline-flex; align-items: center; border: 1px solid var(--line); border-radius: 10px; color: var(--ink); background: white; font-size: 14px; font-weight: 800; text-decoration: none; }
+    main { padding: 54px 0 80px; }
+    .breadcrumb { margin-bottom: 20px; color: var(--muted); font-size: 13px; }
+    .breadcrumb a { color: var(--blue); text-decoration: none; }
+    .page-head { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin-bottom: 30px; }
+    .page-head h1 { margin: 0 0 8px; font-size: clamp(34px, 5vw, 52px); line-height: 1.2; letter-spacing: -.045em; }
+    .page-head p { max-width: 620px; margin: 0; color: var(--muted); font-size: 16px; }
+    .page-head-actions { display: flex; align-items: center; gap: 12px; }
+    .official-mark { width: 78px; height: 78px; display: grid; place-items: center; flex: 0 0 auto; border-radius: 16px; border-bottom: 6px solid var(--gold); color: white; background: var(--blue); font-size: 34px; font-weight: 900; box-shadow: var(--shadow); }
+    .primary-button { min-height: 46px; padding: 0 20px; border: 1px solid var(--blue); border-radius: 10px; color: white; background: var(--blue); font: inherit; font-size: 14px; font-weight: 800; cursor: pointer; box-shadow: 0 8px 20px rgba(11,79,156,.16); }
+    .panel { overflow: hidden; border: 1px solid var(--line); border-radius: 16px; background: white; box-shadow: var(--shadow); }
+    .tabs { display: flex; gap: 8px; padding: 20px 24px; border-bottom: 1px solid var(--line); background: #f9fbfd; }
+    .tab { min-height: 42px; padding: 0 20px; border: 1px solid var(--line); border-radius: 8px; color: #55687a; background: white; font: inherit; font-size: 14px; font-weight: 800; cursor: pointer; }
+    .tab.active { color: white; border-color: var(--blue); background: var(--blue); }
+    .content { padding: 28px; }
+    .empty { min-height: 390px; display: grid; place-items: center; padding: 42px 20px; border: 1px dashed #b8c9d9; border-radius: 12px; background: var(--soft); text-align: center; }
+    .empty-inner { max-width: 410px; }
+    .empty-icon { width: 66px; height: 66px; margin: 0 auto 18px; display: grid; place-items: center; border-radius: 13px; color: white; background: var(--blue); font-size: 28px; font-weight: 900; box-shadow: 0 10px 24px rgba(11,79,156,.18); }
+    .empty h2 { margin: 0 0 8px; font-size: 22px; }
+    .empty p { margin: 0; color: var(--muted); font-size: 14px; }
+    .notice { margin-top: 18px; padding: 16px 18px; border-left: 4px solid var(--gold); border-radius: 8px; color: #53687c; background: #fffaf0; font-size: 14px; }
+    .activity-list { display: grid; gap: 16px; }
+    .official-card { padding: 22px; border: 1px solid var(--line); border-left: 5px solid var(--blue); border-radius: 12px; background: white; }
+    .card-head { display: flex; align-items: start; justify-content: space-between; gap: 18px; margin-bottom: 16px; }
+    .card-head h2 { margin: 0 0 5px; font-size: 21px; }
+    .source { color: var(--muted); font-size: 13px; }
+    .status { flex: 0 0 auto; padding: 5px 10px; border-radius: 999px; color: #3d2a00; background: #fff0c7; font-size: 12px; font-weight: 800; }
+    .info-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px; }
+    .info-item { padding: 11px 12px; border-radius: 8px; background: var(--soft); color: var(--muted); font-size: 13px; }
+    .info-item b { display: block; margin-bottom: 2px; color: var(--ink); }
+    .detail-block { margin-top: 10px; padding: 13px 14px; border: 1px solid var(--line); border-radius: 8px; color: #53687c; font-size: 14px; white-space: pre-wrap; }
+    .detail-block b { display: block; margin-bottom: 3px; color: var(--ink); }
+    .status-row { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; }
+    .status.user { color: #154f40; background: #dff5ed; }
+    .warning { margin-top: 10px; padding: 11px 13px; border-radius: 8px; color: #71551b; background: #fff8e6; font-size: 13px; }
+    dialog { width: min(680px, calc(100% - 28px)); max-height: calc(100vh - 30px); padding: 0; border: 0; border-radius: 18px; color: var(--ink); background: white; box-shadow: 0 28px 80px rgba(16,42,67,.28); }
+    dialog::backdrop { background: rgba(8,27,48,.62); backdrop-filter: blur(4px); }
+    .dialog-head { display: flex; justify-content: space-between; align-items: start; padding: 25px 28px 19px; border-bottom: 1px solid var(--line); }
+    .dialog-head h2 { margin: 0; font-size: 24px; }
+    .dialog-head p { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+    .close { width: 38px; height: 38px; border: 0; border-radius: 50%; color: var(--ink); background: var(--soft); font-size: 22px; cursor: pointer; }
+    form { padding: 22px 28px 28px; }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+    .field { margin-bottom: 17px; }
+    .field label { display: block; margin-bottom: 7px; font-size: 14px; font-weight: 800; }
+    .field input, .field select, .field textarea { width: 100%; min-height: 47px; padding: 10px 12px; border: 1px solid #d5e0ea; border-radius: 9px; color: var(--ink); background: white; font: inherit; font-size: 14px; outline: none; }
+    .field textarea { min-height: 86px; resize: vertical; }
+    .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(11,79,156,.10); }
+    .required { color: #cc4138; }
+    .form-actions { display: flex; justify-content: flex-end; gap: 10px; }
+    .secondary-button { min-height: 44px; padding: 0 18px; border: 1px solid var(--line); border-radius: 9px; color: var(--ink); background: white; font: inherit; font-weight: 800; cursor: pointer; }
+    .toast { position: fixed; left: 50%; bottom: 28px; z-index: 20; transform: translate(-50%,18px); padding: 12px 18px; border-radius: 10px; color: white; background: var(--ink); opacity: 0; pointer-events: none; transition: .25s ease; }
+    .toast.show { opacity: 1; transform: translate(-50%,0); }
+    footer { padding: 28px 0 38px; border-top: 1px solid var(--line); color: var(--muted); background: white; font-size: 13px; }
+    .footer-inner { display: flex; justify-content: space-between; gap: 20px; }
+    @media (max-width: 760px) {
+      .shell { width: min(100% - 28px, 1120px); }
+      .nav-links { display: none; }
+      .brand { font-size: 18px; }
+      .brand-mark { width: 36px; height: 36px; }
+      .back-home { padding: 0 13px; }
+      main { padding-top: 38px; }
+      .page-head { align-items: start; }
+      .page-head-actions { flex-direction: column-reverse; align-items: stretch; }
+      .official-mark { width: 60px; height: 60px; font-size: 25px; }
+      .tabs { padding: 16px; }
+      .tab { flex: 1; padding: 0 10px; }
+      .content { padding: 16px; }
+      .empty { min-height: 330px; }
+      .info-grid, .field-row { grid-template-columns: 1fr; }
+      .dialog-head { padding: 22px 20px 17px; }
+      form { padding: 20px; }
+      .footer-inner { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav class="shell" aria-label="主导航">
+      <a class="brand" href="index.html"><span class="brand-mark">讯</span>校讯拾机</a>
+      <div class="nav-links"><a class="nav-link" href="index.html">同学活动</a><a class="nav-link active" href="official.html" aria-current="page">官方活动</a></div>
+      <a class="back-home" href="index.html">← 返回首页</a>
+    </nav>
+  </header>
+
+  <main class="shell">
+    <div class="breadcrumb"><a href="index.html">首页</a> / 官方活动</div>
+    <section class="page-head">
+      <div><h1>官方活动</h1><p>集中查看由学校或学院确认发布的正式校园活动，来源清晰，层级明确。</p></div>
+      <div class="page-head-actions"><button class="primary-button" type="button" id="open-publish">发布官方活动</button><div class="official-mark" aria-hidden="true">校</div></div>
+    </section>
+
+    <section class="panel" aria-labelledby="official-section-title">
+      <div class="tabs" role="tablist" aria-label="官方活动级别">
+        <button class="tab active" id="school-tab" type="button" role="tab" aria-selected="true" aria-controls="official-content" data-scope="school">校级活动</button>
+        <button class="tab" id="college-tab" type="button" role="tab" aria-selected="false" aria-controls="official-content" data-scope="college">院级活动</button>
+      </div>
+      <div class="content" id="official-content" role="tabpanel" aria-labelledby="school-tab">
+        <div class="activity-list" id="activity-list"></div>
+        <div class="empty" id="empty-state">
+          <div class="empty-inner">
+            <div class="empty-icon" id="empty-icon">校</div>
+            <h2 id="official-section-title">暂无校级活动</h2>
+            <p id="empty-copy">校级活动将在学校确认并发布后显示在这里。</p>
+          </div>
+        </div>
+        <div class="notice">题目内置的官方活动按原始来源展示；用户自行录入的内容会明确标注“尚未核验”。本页不使用虚构活动填充。</div>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="publish-dialog" aria-labelledby="publish-title">
+    <div class="dialog-head">
+      <div><h2 id="publish-title">发布官方活动</h2><p>请按照原始通知如实填写活动信息。</p></div>
+      <button class="close" type="button" id="close-publish" aria-label="关闭发布窗口">×</button>
+    </div>
+    <form id="publish-form">
+      <div class="field-row">
+        <div class="field"><label for="activity-type">活动类型 <span class="required">*</span></label><input id="activity-type" name="type" type="text" maxlength="40" placeholder="例如：讲座、比赛、志愿活动" required></div>
+        <div class="field"><label for="activity-source">来源 <span class="required">*</span></label><select id="activity-source" name="source" required><option value="school">校级活动</option><option value="college">院级活动</option></select></div>
+      </div>
+      <div class="field" id="college-field" hidden><label for="activity-college">所属学院 <span class="required">*</span></label><input id="activity-college" name="college" type="text" maxlength="40" placeholder="请输入发布活动的学院名称"></div>
+      <div class="field-row">
+        <div class="field"><label for="activity-time">时间 <span class="required">*</span></label><input id="activity-time" name="time" type="datetime-local" required></div>
+        <div class="field"><label for="activity-location">地点 <span class="required">*</span></label><input id="activity-location" name="location" type="text" maxlength="60" placeholder="请输入具体地点" required></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label for="activity-audience">适用对象 <span class="required">*</span></label><input id="activity-audience" name="audience" type="text" maxlength="80" placeholder="例如：全校本科生" required></div>
+        <div class="field"><label for="activity-status">当前状态 <span class="required">*</span></label><select id="activity-status" name="status" required><option>报名中</option><option>即将开始</option><option>进行中</option><option>已结束</option></select></div>
+      </div>
+      <div class="field"><label for="activity-condition">报名 / 参与条件 <span class="required">*</span></label><textarea id="activity-condition" name="condition" maxlength="300" placeholder="填写报名资格、人数限制或参与要求" required></textarea></div>
+      <div class="field"><label for="activity-description">原始说明 <span class="required">*</span></label><textarea id="activity-description" name="description" maxlength="1000" placeholder="请粘贴或填写官方活动的原始说明" required></textarea></div>
+      <div class="form-actions"><button class="secondary-button" type="button" id="cancel-publish">取消</button><button class="primary-button" type="submit">确认发布</button></div>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">官方活动发布成功</div>
+
+  <footer><div class="shell footer-inner"><span>© 2026 校讯拾机 · 校园活动与机会平台</span><span>官方信息，清晰分类</span></div></footer>
+
+  <script src="data.js"></script>
+  <script>
+    const tabs = document.querySelectorAll('[data-scope]');
+    const title = document.getElementById('official-section-title');
+    const copy = document.getElementById('empty-copy');
+    const icon = document.getElementById('empty-icon');
+    const panel = document.getElementById('official-content');
+    const emptyState = document.getElementById('empty-state');
+    const activityList = document.getElementById('activity-list');
+    const publishDialog = document.getElementById('publish-dialog');
+    const publishForm = document.getElementById('publish-form');
+    const sourceSelect = document.getElementById('activity-source');
+    const collegeField = document.getElementById('college-field');
+    const collegeInput = document.getElementById('activity-college');
+    const storageKey = 'xiaoxun-official-events';
+    let currentScope = 'school';
+
+    function getUserActivities() {
+      try { return JSON.parse(localStorage.getItem(storageKey) || '[]'); } catch (_) { return []; }
+    }
+
+    function getActivities() {
+      const builtIn = (window.CAMPUS_ACTIVITIES || []).filter(item => item.official).map(item => ({
+        id: item.id, type: item.title, source: item.officialScope, college: item.college || '',
+        timeText: item.timeText, location: item.location, audience: item.audience, condition: item.conditions,
+        description: item.summary, statuses: item.statusTags || [], sourceLabel: item.sourceLabel,
+        missing: item.missing || [], builtIn: true
+      }));
+      const local = getUserActivities().map((item, index) => ({
+        ...item, id: `local-official-${index}`, timeText: formatTime(item.time), statuses: [item.status],
+        sourceLabel: item.source === 'school' ? '用户录入 · 校级活动' : `用户录入 · ${item.college || '院级活动'}`,
+        missing: [], builtIn: false
+      }));
+      return [...local, ...builtIn];
+    }
+
+    function escapeHTML(value) {
+      return String(value).replace(/[&<>'"]/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
+    }
+
+    function formatTime(value) {
+      return new Intl.DateTimeFormat('zh-CN', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'short', hour: '2-digit', minute: '2-digit' }).format(new Date(value));
+    }
+
+    function renderActivities() {
+      const items = getActivities().filter(item => item.source === currentScope);
+      emptyState.hidden = items.length > 0;
+      activityList.innerHTML = items.map(item => {
+        const source = item.builtIn ? item.sourceLabel : (item.source === 'school' ? '用户录入 · 校级活动' : `用户录入 · ${escapeHTML(item.college)}`);
+        const statuses = (item.statuses || [item.status]).map(status => `<span class="status${item.builtIn ? '' : ' user'}">${escapeHTML(status)}</span>`).join('');
+        const warning = item.builtIn
+          ? (item.missing.length ? `<div class="warning"><b>信息完整性提示：</b>缺失或待确认：${escapeHTML(item.missing.join('、'))}</div>` : '')
+          : '<div class="warning"><b>来源提示：</b>此条内容由用户录入，尚未由平台核验，请对照原通知确认。</div>';
+        return `<article class="official-card">
+          <div class="card-head"><div><h2>${escapeHTML(item.type)}</h2><div class="source">来源：${source}${item.builtIn ? ` · 编号 ${escapeHTML(item.id)}` : ''}</div></div><div class="status-row">${statuses}</div></div>
+          <div class="info-grid">
+            <div class="info-item"><b>时间</b>${escapeHTML(item.timeText || formatTime(item.time))}</div>
+            <div class="info-item"><b>地点</b>${escapeHTML(item.location)}</div>
+            <div class="info-item"><b>适用对象</b>${escapeHTML(item.audience)}</div>
+          </div>
+          <div class="detail-block"><b>报名 / 参与条件</b>${escapeHTML(item.condition)}</div>
+          <div class="detail-block"><b>原始说明</b>${escapeHTML(item.description)}</div>
+          ${warning}
+        </article>`;
+      }).join('');
+    }
+
+    function selectScope(scope) {
+      const isSchool = scope === 'school';
+      currentScope = scope;
+      tabs.forEach(tab => {
+        const active = tab.dataset.scope === scope;
+        tab.classList.toggle('active', active);
+        tab.setAttribute('aria-selected', String(active));
+      });
+      title.textContent = isSchool ? '暂无校级活动' : '暂无院级活动';
+      copy.textContent = isSchool ? '校级活动将在学校确认并发布后显示在这里。' : '院级活动将在学院确认并发布后显示在这里。';
+      icon.textContent = isSchool ? '校' : '院';
+      panel.setAttribute('aria-labelledby', isSchool ? 'school-tab' : 'college-tab');
+      renderActivities();
+    }
+
+    tabs.forEach(tab => tab.addEventListener('click', () => selectScope(tab.dataset.scope)));
+    sourceSelect.addEventListener('change', () => {
+      const isCollege = sourceSelect.value === 'college';
+      collegeField.hidden = !isCollege;
+      collegeInput.required = isCollege;
+      if (!isCollege) collegeInput.value = '';
+    });
+    document.getElementById('open-publish').addEventListener('click', () => {
+      document.getElementById('activity-time').min = `${window.CAMPUS_DATA_REFERENCE_DATE}T00:00`;
+      publishDialog.showModal();
+      setTimeout(() => document.getElementById('activity-type').focus(), 0);
+    });
+    document.getElementById('close-publish').addEventListener('click', () => publishDialog.close());
+    document.getElementById('cancel-publish').addEventListener('click', () => publishDialog.close());
+    publishDialog.addEventListener('click', event => { if (event.target === publishDialog) publishDialog.close(); });
+    publishForm.addEventListener('submit', event => {
+      event.preventDefault();
+      if (!publishForm.reportValidity()) return;
+      const item = Object.fromEntries(new FormData(publishForm));
+      const activities = getUserActivities();
+      activities.unshift(item);
+      localStorage.setItem(storageKey, JSON.stringify(activities));
+      publishForm.reset();
+      collegeField.hidden = true;
+      collegeInput.required = false;
+      publishDialog.close();
+      selectScope(item.source);
+      const toast = document.getElementById('toast');
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2200);
+    });
+
+    selectScope('school');
+  </script>
+</body>
+</html>

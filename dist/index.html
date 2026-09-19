@@ -194,7 +194,7 @@
     .logout-card button { width: 100%; padding: 9px 10px; border: 0; border-radius: 9px; background: transparent; color: #d93f37; text-align: left; font: inherit; cursor: pointer; }
     .logout-card button:hover { background: #fff1f0; }
 
-    #discover-dialog { width: min(1080px, calc(100% - 28px)); }
+    #discover-dialog, #official-dialog { width: min(1080px, calc(100% - 28px)); }
     .discover-shell { min-height: 650px; }
     .discover-toolbar { padding: 24px 30px 10px; }
     .category-tabs { display: flex; gap: 9px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: thin; }
@@ -223,6 +223,11 @@
     .join-box strong { color: var(--blue); font-size: 14px; }
     .join-box .btn { min-height: 37px; padding: 0 14px; }
     .empty-groups { padding: 60px 20px; border-radius: 18px; background: var(--soft); text-align: center; color: var(--muted); }
+    .official-empty { min-height: 390px; display: grid; place-items: center; padding: 42px 20px; border: 1px dashed #b8c9d9; border-radius: 14px; background: #f7fafc; text-align: center; }
+    .official-empty-inner { max-width: 390px; }
+    .official-empty-icon { width: 64px; height: 64px; margin: 0 auto 18px; display: grid; place-items: center; border-radius: 14px; color: white; background: var(--blue); font-size: 28px; box-shadow: 0 10px 24px rgba(11, 79, 156, .18); }
+    .official-empty h3 { margin: 0 0 8px; font-size: 21px; }
+    .official-empty p { margin: 0; color: var(--muted); font-size: 14px; }
 
     @media (max-width: 900px) {
       .nav-links { display: none; }
@@ -269,7 +274,7 @@
   <header>
     <nav class="shell" aria-label="主导航">
       <div class="brand"><span class="brand-mark">讯</span>校讯拾机</div>
-      <div class="nav-links"><button class="nav-link" type="button" data-open-discover>发现组局</button><button class="nav-link" type="button" data-open-discover>兴趣分类</button><span>校园指南</span></div>
+      <div class="nav-links"><button class="nav-link" type="button" data-open-discover>同学活动</button><button class="nav-link" type="button" data-open-official>官方活动</button><button class="nav-link" type="button" data-open-discover>活动分类</button></div>
       <div class="nav-actions">
         <button class="btn" id="login-button" type="button" data-open-auth>登录 / 注册</button>
         <div class="user-menu" id="user-menu" hidden>
@@ -289,7 +294,7 @@
         <p class="lead">从社团活动、比赛招募到学习搭子与周末体验，让值得参与的校园信息更容易被看见。</p>
         <div class="hero-actions">
           <button class="btn primary" type="button" data-open-discover>看看大家在组什么局</button>
-          <span class="btn">了解校园认证</span>
+          <button class="btn" type="button" data-open-official>查看官方活动</button>
         </div>
         <div class="trust">
           <div class="faces"><span class="face">🧑</span><span class="face">👩</span><span class="face">👨</span><span class="face">👩</span></div>
@@ -318,7 +323,7 @@
     <section class="section soft">
       <div class="shell">
         <div class="section-head">
-          <div><h2>找到你的兴趣场</h2><p>从喜欢的事情开始，自然认识一群新朋友。</p></div>
+          <div><h2>找到你的兴趣场</h2><p>这里展示由同学自主发起的校园活动。</p></div>
           <button class="more" type="button" data-open-all>查看全部分类 →</button>
         </div>
         <div class="categories">
@@ -335,7 +340,7 @@
     <section class="section">
       <div class="shell">
         <div class="section-head">
-          <div><h2>最近的热门组局</h2><p>和附近的同学，一起把想做的事变成今天的安排。</p></div>
+          <div><h2>同学发起的热门活动</h2><p>和附近的同学，一起把想做的事变成今天的安排。</p></div>
           <span class="more">发现更多组局 →</span>
         </div>
         <div class="events" id="event-list">
@@ -427,9 +432,33 @@
     </div>
   </dialog>
 
+  <dialog id="official-dialog" aria-labelledby="official-title">
+    <div class="discover-shell">
+      <div class="modal-head">
+        <div><h2 id="official-title">官方活动</h2><p>查看由学校或学院发布的正式校园活动。</p></div>
+        <button class="close-btn" type="button" aria-label="关闭官方活动窗口" data-close-official>×</button>
+      </div>
+      <div class="discover-toolbar">
+        <div class="category-tabs" aria-label="官方活动级别">
+          <button class="category-tab active" type="button" data-official-scope="school">校级活动</button>
+          <button class="category-tab" type="button" data-official-scope="college">院级活动</button>
+        </div>
+      </div>
+      <div class="discover-content">
+        <div class="official-empty">
+          <div class="official-empty-inner">
+            <div class="official-empty-icon">校</div>
+            <h3 id="official-empty-title">暂无校级活动</h3>
+            <p id="official-empty-copy">官方活动将在学校确认并发布后显示在这里。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
   <dialog id="publish-dialog" aria-labelledby="publish-title">
     <div class="modal-head">
-      <div><h2 id="publish-title">发布组局</h2><p>把时间地点说清楚，更容易找到合适的搭子。</p></div>
+      <div><h2 id="publish-title">发布组局</h2><p>你发布的内容将归入“同学活动”。</p></div>
       <button class="close-btn" type="button" aria-label="关闭发布窗口" data-close-publish>×</button>
     </div>
     <form class="publish-form" id="publish-form">
@@ -493,6 +522,7 @@
   <script>
     const publishDialog = document.getElementById('publish-dialog');
     const discoverDialog = document.getElementById('discover-dialog');
+    const officialDialog = document.getElementById('official-dialog');
     const authDialog = document.getElementById('auth-dialog');
     const form = document.getElementById('publish-form');
     const loginForm = document.getElementById('login-form');
@@ -675,6 +705,21 @@
       discoverDialog.showModal();
     }
 
+    function showOfficialScope(scope) {
+      const isSchool = scope === 'school';
+      document.querySelectorAll('[data-official-scope]').forEach(button => button.classList.toggle('active', button.dataset.officialScope === scope));
+      document.getElementById('official-empty-title').textContent = isSchool ? '暂无校级活动' : '暂无院级活动';
+      document.getElementById('official-empty-copy').textContent = isSchool
+        ? '官方活动将在学校确认并发布后显示在这里。'
+        : '官方活动将在学院确认并发布后显示在这里。';
+      document.querySelector('.official-empty-icon').textContent = isSchool ? '校' : '院';
+    }
+
+    function openOfficial() {
+      showOfficialScope('school');
+      officialDialog.showModal();
+    }
+
     function showGroups(activity) {
       document.getElementById('activity-view').hidden = true;
       document.getElementById('group-view').hidden = false;
@@ -724,9 +769,13 @@
     document.querySelectorAll('[data-close-publish]').forEach(button => button.addEventListener('click', () => publishDialog.close()));
     publishDialog.addEventListener('click', event => { if (event.target === publishDialog) publishDialog.close(); });
     document.querySelectorAll('[data-open-discover]').forEach(button => button.addEventListener('click', () => openDiscover(button.dataset.category)));
+    document.querySelectorAll('[data-open-official]').forEach(button => button.addEventListener('click', openOfficial));
     document.querySelector('[data-open-all]').addEventListener('click', () => openDiscover(null, true));
     document.querySelector('[data-close-discover]').addEventListener('click', () => discoverDialog.close());
     discoverDialog.addEventListener('click', event => { if (event.target === discoverDialog) discoverDialog.close(); });
+    document.querySelector('[data-close-official]').addEventListener('click', () => officialDialog.close());
+    officialDialog.addEventListener('click', event => { if (event.target === officialDialog) officialDialog.close(); });
+    document.querySelectorAll('[data-official-scope]').forEach(button => button.addEventListener('click', () => showOfficialScope(button.dataset.officialScope)));
     document.getElementById('back-to-activities').addEventListener('click', () => {
       document.getElementById('activity-view').hidden = false;
       document.getElementById('group-view').hidden = true;

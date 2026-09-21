@@ -8,42 +8,47 @@
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b3a75'/%3E%3Cpath d='M15 18h34v30H15z' fill='white'/%3E%3Cpath d='M21 25h22M21 32h16M21 39h19' stroke='%230b3a75' stroke-width='4' stroke-linecap='round'/%3E%3Cpath d='M43 14v12' stroke='%23f2b84b' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E">
   <style>
     :root {
-      --ink: #102a43;
-      --muted: #66788a;
-      --line: #dce6ef;
+      --ink: #142b46;
+      --muted: #62758a;
+      --line: #d8e4ef;
       --paper: #ffffff;
-      --soft: #f3f7fb;
-      --blue: #0b4f9c;
+      --soft: #f3f8fc;
+      --blue: #1557a4;
       --gold: #f2b84b;
-      --shadow: 0 16px 44px rgba(16, 42, 67, .10);
+      --shadow: 0 18px 48px rgba(17, 56, 94, .11);
     }
     * { box-sizing: border-box; }
-    body { margin: 0; color: var(--ink); background: #f5f9fc; font-family: "Microsoft YaHei", "PingFang SC", system-ui, -apple-system, sans-serif; line-height: 1.6; }
+    [hidden] { display: none !important; }
+    body { margin: 0; color: var(--ink); background: radial-gradient(circle at 85% 130px, #e9f4ff 0, transparent 390px), #f7fbff; font-family: "Microsoft YaHei", "PingFang SC", system-ui, -apple-system, sans-serif; line-height: 1.6; }
     .shell { width: min(1120px, calc(100% - 40px)); margin: 0 auto; }
-    header { height: 78px; display: flex; align-items: center; border-top: 4px solid var(--blue); border-bottom: 1px solid var(--line); background: rgba(255,255,255,.96); }
+    header { height: 78px; display: flex; align-items: center; border-top: 4px solid var(--blue); border-bottom: 1px solid var(--line); background: rgba(255,255,255,.96); box-shadow: 0 6px 22px rgba(20,55,91,.045); }
     nav { display: flex; align-items: center; justify-content: space-between; gap: 28px; }
     .brand { display: flex; align-items: center; gap: 11px; color: var(--ink); font-size: 21px; font-weight: 900; letter-spacing: .02em; text-decoration: none; }
     .brand-mark { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 9px; border-bottom: 4px solid var(--gold); color: white; background: var(--blue); font-size: 18px; box-shadow: 0 7px 18px rgba(11,79,156,.20); }
-    .nav-links { display: flex; gap: 30px; align-items: center; }
-    .nav-link { color: #55687a; text-decoration: none; font-size: 15px; }
+    .nav-links { display: flex; gap: 10px; align-items: center; }
+    .nav-link { padding: 8px 12px; border-radius: 9px; color: #53677d; text-decoration: none; font-size: 15px; transition: background .18s ease, color .18s ease; }
+    .nav-link:hover { color: var(--blue); background: #edf5fc; }
     .nav-link.active { color: var(--blue); font-weight: 800; }
-    .back-home { min-height: 42px; padding: 0 18px; display: inline-flex; align-items: center; border: 1px solid var(--line); border-radius: 10px; color: var(--ink); background: white; font-size: 14px; font-weight: 800; text-decoration: none; }
-    main { padding: 54px 0 80px; }
+    .back-home { min-height: 42px; padding: 0 18px; display: inline-flex; align-items: center; border: 1px solid var(--line); border-radius: 10px; color: var(--ink); background: white; font-size: 14px; font-weight: 800; text-decoration: none; transition: transform .18s ease, box-shadow .18s ease; }
+    .back-home:hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(17,56,94,.10); }
+    main { padding: 46px 0 80px; }
     .breadcrumb { margin-bottom: 20px; color: var(--muted); font-size: 13px; }
     .breadcrumb a { color: var(--blue); text-decoration: none; }
-    .page-head { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin-bottom: 30px; }
+    .page-head { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin-bottom: 30px; padding: 20px 0 4px; }
     .page-head h1 { margin: 0 0 8px; font-size: clamp(34px, 5vw, 52px); line-height: 1.2; letter-spacing: -.045em; }
     .page-head p { max-width: 620px; margin: 0; color: var(--muted); font-size: 16px; }
     .page-head-actions { display: flex; align-items: center; gap: 12px; }
     .official-mark { width: 78px; height: 78px; display: grid; place-items: center; flex: 0 0 auto; border-radius: 16px; border-bottom: 6px solid var(--gold); color: white; background: var(--blue); font-size: 34px; font-weight: 900; box-shadow: var(--shadow); }
-    .primary-button { min-height: 46px; padding: 0 20px; border: 1px solid var(--blue); border-radius: 10px; color: white; background: var(--blue); font: inherit; font-size: 14px; font-weight: 800; cursor: pointer; box-shadow: 0 8px 20px rgba(11,79,156,.16); }
-    .panel { overflow: hidden; border: 1px solid var(--line); border-radius: 16px; background: white; box-shadow: var(--shadow); }
-    .tabs { display: flex; gap: 8px; padding: 20px 24px; border-bottom: 1px solid var(--line); background: #f9fbfd; }
-    .tab { min-height: 42px; padding: 0 20px; border: 1px solid var(--line); border-radius: 8px; color: #55687a; background: white; font: inherit; font-size: 14px; font-weight: 800; cursor: pointer; }
+    .primary-button { min-height: 46px; padding: 0 20px; border: 1px solid #0b4f9c; border-radius: 10px; color: white; background: linear-gradient(135deg, #1968b9, #0b468c); font: inherit; font-size: 14px; font-weight: 800; cursor: pointer; box-shadow: 0 8px 20px rgba(11,79,156,.19); transition: transform .18s ease, box-shadow .18s ease; }
+    .primary-button:hover { transform: translateY(-2px); box-shadow: 0 12px 23px rgba(11,79,156,.23); }
+    .panel { overflow: hidden; border: 1px solid var(--line); border-radius: 20px; background: white; box-shadow: var(--shadow); }
+    .tabs { display: flex; gap: 8px; padding: 17px 24px; border-bottom: 1px solid var(--line); background: #f7fbfe; }
+    .tab { min-height: 42px; padding: 0 20px; border: 1px solid var(--line); border-radius: 10px; color: #55687a; background: white; font: inherit; font-size: 14px; font-weight: 800; cursor: pointer; transition: background .18s ease, color .18s ease; }
+    .tab:hover { color: var(--blue); background: #edf5fc; }
     .tab.active { color: white; border-color: var(--blue); background: var(--blue); }
     .content { padding: 28px; }
-    .filter-bar { display: grid; grid-template-columns: 1.5fr repeat(3, minmax(140px, .7fr)) auto; gap: 10px; margin-bottom: 12px; }
-    .filter-bar input, .filter-bar select { min-height: 44px; padding: 0 12px; border: 1px solid var(--line); border-radius: 9px; color: var(--ink); background: white; font: inherit; font-size: 14px; outline: none; }
+    .filter-bar { display: grid; grid-template-columns: 1.5fr repeat(3, minmax(140px, .7fr)) auto; gap: 10px; margin-bottom: 12px; padding: 12px; border: 1px solid var(--line); border-radius: 14px; background: #f9fbfe; }
+    .filter-bar input, .filter-bar select { min-width: 0; min-height: 44px; padding: 0 12px; border: 1px solid var(--line); border-radius: 9px; color: var(--ink); background: white; font: inherit; font-size: 14px; outline: none; }
     .filter-bar input:focus, .filter-bar select:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(11,79,156,.10); }
     .filter-reset { min-height: 44px; padding: 0 16px; border: 1px solid var(--line); border-radius: 9px; color: var(--blue); background: white; font: inherit; font-weight: 800; cursor: pointer; }
     .filter-summary { margin: 0 0 18px; color: var(--muted); font-size: 13px; }
@@ -53,12 +58,26 @@
     .empty h2 { margin: 0 0 8px; font-size: 22px; }
     .empty p { margin: 0; color: var(--muted); font-size: 14px; }
     .notice { margin-top: 18px; padding: 16px 18px; border-left: 4px solid var(--gold); border-radius: 8px; color: #53687c; background: #fffaf0; font-size: 14px; }
-    .activity-list { display: grid; gap: 16px; }
-    .official-card { padding: 22px; border: 1px solid var(--line); border-left: 5px solid var(--blue); border-radius: 12px; background: white; }
-    .card-head { display: flex; align-items: start; justify-content: space-between; gap: 18px; margin-bottom: 16px; }
-    .card-head h2 { margin: 0 0 5px; font-size: 21px; }
+    .activity-list { display: grid; gap: 13px; }
+    .official-card { padding: 18px 21px; border: 1px solid var(--line); border-left: 4px solid var(--blue); border-radius: 14px; background: white; box-shadow: 0 5px 18px rgba(16,42,67,.045); transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease; }
+    .official-card:hover { transform: translateY(-2px); border-color: #9bbddd; box-shadow: 0 12px 28px rgba(16,60,99,.10); }
+    .official-card[open] { border-color: #9bbddd; box-shadow: 0 15px 34px rgba(16,60,99,.11); }
+    .official-preview { display: block; list-style: none; cursor: pointer; }
+    .official-preview::-webkit-details-marker { display: none; }
+    .official-preview:focus-visible { outline: 3px solid var(--blue); outline-offset: 5px; }
+    .official-open { color: var(--blue); font-size: 13px; font-weight: 800; white-space: nowrap; }
+    .official-open::after { content: ' →'; }
+    .official-card[open] .official-open::after { content: ' ↑'; }
+    .official-expanded { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--line); }
+    .official-expanded .info-grid { margin-top: 14px; }
+    .card-head { display: flex; align-items: start; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+    .card-head h2 { margin: 0 0 5px; font-size: 19px; line-height: 1.35; }
+    .official-kind { color: var(--blue); font-size: 13px; font-weight: 800; }
+    .official-brief { color: var(--muted); font-size: 13px; }
+    .official-preview-bottom { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 14px; padding-top: 12px; border-top: 1px solid #edf2f7; }
     .source { color: var(--muted); font-size: 13px; }
     .status { flex: 0 0 auto; padding: 5px 10px; border-radius: 999px; color: #3d2a00; background: #fff0c7; font-size: 12px; font-weight: 800; }
+    .tab:focus-visible, .primary-button:focus-visible, .back-home:focus-visible, .filter-reset:focus-visible { outline: 3px solid #9ac8f5; outline-offset: 2px; }
     .info-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px; }
     .info-item { padding: 11px 12px; border-radius: 8px; background: var(--soft); color: var(--muted); font-size: 13px; }
     .info-item b { display: block; margin-bottom: 2px; color: var(--ink); }
@@ -120,6 +139,10 @@
       .footer-inner { flex-direction: column; }
     }
     @media (max-width: 520px) {
+      .page-head { flex-direction: column; align-items: stretch; gap: 18px; }
+      .page-head-actions { width: 100%; flex-direction: row; }
+      .page-head-actions .primary-button { width: 100%; }
+      .official-mark { display: none; }
       .filter-bar { grid-template-columns: 1fr; }
       .filter-bar input { grid-column: auto; }
     }
@@ -129,7 +152,7 @@
   <header>
     <nav class="shell" aria-label="主导航">
       <a class="brand" href="index.html"><span class="brand-mark">讯</span>校讯拾机</a>
-      <div class="nav-links"><a class="nav-link" href="index.html">同学活动</a><a class="nav-link active" href="official.html" aria-current="page">官方活动</a></div>
+      <div class="nav-links"><a class="nav-link" href="student.html">同学活动</a><a class="nav-link active" href="official.html" aria-current="page">官方活动</a></div>
       <a class="back-home" href="index.html">← 返回首页</a>
     </nav>
   </header>
@@ -141,7 +164,7 @@
       <div class="page-head-actions"><button class="primary-button" type="button" id="open-publish">发布官方活动</button><div class="official-mark" aria-hidden="true">校</div></div>
     </section>
 
-    <section class="panel" aria-labelledby="official-section-title">
+    <section class="panel" aria-label="官方活动列表">
       <div class="tabs" role="tablist" aria-label="官方活动级别">
         <button class="tab active" id="school-tab" type="button" role="tab" aria-selected="true" aria-controls="official-content" data-scope="school">校级活动</button>
         <button class="tab" id="college-tab" type="button" role="tab" aria-selected="false" aria-controls="official-content" data-scope="college">院级活动</button>
@@ -156,7 +179,7 @@
         </div>
         <p class="filter-summary" id="filter-summary">正在载入官方活动…</p>
         <div class="activity-list" id="activity-list"></div>
-        <div class="empty" id="empty-state">
+        <div class="empty" id="empty-state" hidden>
           <div class="empty-inner">
             <div class="empty-icon" id="empty-icon">校</div>
             <h2 id="official-section-title">暂无校级活动</h2>
@@ -277,10 +300,8 @@
       }
       activityList.innerHTML = items.map(item => {
         const source = item.builtIn ? item.sourceLabel : (item.source === 'school' ? '用户录入 · 校级活动' : `用户录入 · ${escapeHTML(item.college)}`);
-        const statuses = item.assistant.cardStatuses.map(status => {
-          const tone = status.includes('更新') ? ' updated' : status.includes('待确认') || status.includes('未知') ? ' uncertain' : status.includes('结束') ? ' closed' : ['报名中', '进行中', '今日活动'].includes(status) ? ' active' : '';
-          return `<span class="status${item.builtIn ? tone : ' user'}">${escapeHTML(status)}</span>`;
-        }).join('');
+        const keyStatus = item.assistant.risk.label || item.assistant.cardStatuses[0] || '查看详情';
+        const tone = keyStatus.includes('更新') ? ' updated' : keyStatus.includes('待确认') || keyStatus.includes('未知') ? ' uncertain' : keyStatus.includes('结束') ? ' closed' : ['报名中', '进行中', '今日活动'].includes(keyStatus) ? ' active' : '';
         const warning = item.builtIn
           ? ''
           : '<div class="warning"><b>来源提示：</b>此条内容由用户录入，尚未由平台核验，请对照原通知确认。</div>';
@@ -293,8 +314,15 @@
         const assistantDetails = item.assistant.informationTips.length || notices
           ? `<details class="assistant-details"><summary>${item.assistant.hasUpdate ? '查看更新说明与完整提示' : '查看信息完整性提示'}</summary>${item.assistant.informationTips.length ? `<ul>${item.assistant.informationTips.map(tip => `<li>${escapeHTML(tip)}</li>`).join('')}</ul>` : ''}${item.original?.updateSummary ? `<p><b>更新摘要：</b>${escapeHTML(item.original.updateSummary)}</p>` : ''}${notices}</details>`
           : '';
-        return `<article class="official-card">
-          <div class="card-head"><div><h2>${escapeHTML(item.type)}</h2><div class="source">来源：${source}${item.builtIn ? ` · 编号 ${escapeHTML(item.id)}` : ''}</div></div><div class="status-row">${statuses}</div></div>
+        return `<details class="official-card">
+          <summary class="official-preview" aria-label="查看${escapeHTML(item.type)}详情">
+            <div class="official-kind">${escapeHTML(item.category || '官方活动')}</div>
+            <div class="card-head"><h2>${escapeHTML(item.type)}</h2></div>
+            <div class="official-brief">${escapeHTML(item.timeText || formatTime(item.time))} · ${escapeHTML(item.location || '地点未提供')}</div>
+            <div class="official-preview-bottom"><span class="status${item.builtIn ? tone : ' user'}">${escapeHTML(keyStatus)}</span><span class="official-open">查看详情</span></div>
+          </summary>
+          <div class="official-expanded">
+          <div class="source">来源：${source}${item.builtIn ? ` · 编号 ${escapeHTML(item.id)}` : ''}</div>
           <div class="info-grid">
             <div class="info-item"><b>时间</b>${escapeHTML(item.timeText || formatTime(item.time))}</div>
             <div class="info-item"><b>地点</b>${escapeHTML(item.location)}</div>
@@ -305,7 +333,8 @@
           ${assistantBox}
           ${assistantDetails}
           ${warning}
-        </article>`;
+          </div>
+        </details>`;
       }).join('');
     }
 

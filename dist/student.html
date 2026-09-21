@@ -1,0 +1,673 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="校讯拾机同学活动——浏览、搜索和发布学生个人活动。">
+  <title>同学活动 · 校讯拾机</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b3a75'/%3E%3Cpath d='M15 18h34v30H15z' fill='white'/%3E%3Cpath d='M21 25h22M21 32h16M21 39h19' stroke='%230b3a75' stroke-width='4' stroke-linecap='round'/%3E%3Cpath d='M43 14v12' stroke='%23f2b84b' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E">
+  <style>
+    :root {
+      --ink: #142b46;
+      --muted: #62758a;
+      --line: #d8e4ef;
+      --paper: #ffffff;
+      --soft: #f3f8fc;
+      --blue: #1557a4;
+      --lime: #f2b84b;
+      --orange: #d96b3b;
+      --purple: #526b9a;
+      --shadow: 0 18px 48px rgba(17, 56, 94, .11);
+    }
+
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: radial-gradient(circle at 78% 110px, #e9f4ff 0, transparent 390px), linear-gradient(180deg, #f7fbff 0, #fff 660px);
+      font-family: "Microsoft YaHei", "PingFang SC", system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+    }
+
+    .shell { width: min(1180px, calc(100% - 40px)); margin: 0 auto; }
+
+    header {
+      height: 78px;
+      display: flex;
+      align-items: center;
+      border-top: 4px solid var(--blue);
+      border-bottom: 1px solid rgba(220, 230, 239, .95);
+      background: rgba(255, 255, 255, .96);
+      box-shadow: 0 6px 22px rgba(20, 55, 91, .045);
+    }
+
+    nav { display: flex; align-items: center; justify-content: space-between; gap: 28px; }
+    .brand { display: flex; align-items: center; gap: 11px; font-size: 21px; font-weight: 900; letter-spacing: .02em; }
+    .brand-mark {
+      width: 40px; height: 40px; border-radius: 9px; background: var(--blue);
+      display: grid; place-items: center; color: white; font-size: 18px; font-weight: 900;
+      box-shadow: 0 7px 18px rgba(11, 79, 156, .20); border-bottom: 4px solid var(--lime);
+    }
+    .nav-links { display: flex; gap: 10px; color: #53677d; font-size: 15px; }
+    .nav-link { border: 0; border-radius: 9px; padding: 8px 12px; color: inherit; background: none; font: inherit; cursor: pointer; text-decoration: none; transition: background .18s ease, color .18s ease; }
+    .nav-link:hover { color: var(--blue); background: #edf5fc; }
+    .nav-link[aria-current="page"] { color: var(--ink); font-weight: 700; }
+    .nav-actions { display: flex; gap: 10px; align-items: center; }
+    .btn {
+      min-height: 42px; padding: 0 19px; border-radius: 12px; display: inline-flex;
+      align-items: center; justify-content: center; font-weight: 700; font-size: 14px;
+      border: 1px solid var(--line); background: white; color: inherit; cursor: pointer;
+      font-family: inherit; text-decoration: none;
+      transition: transform .18s ease, background .18s ease, box-shadow .18s ease;
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(17, 56, 94, .10); }
+    .btn:focus-visible, .more:focus-visible { outline: 3px solid #9ac8f5; outline-offset: 2px; }
+    .btn.primary { color: white; background: linear-gradient(135deg, #1968b9, #0b468c); border-color: #0b4f9c; box-shadow: 0 8px 20px rgba(11, 79, 156, .19); }
+
+    .hero {
+      position: relative;
+      display: grid; grid-template-columns: 1.08fr .92fr; gap: 58px;
+      align-items: center; min-height: 450px; padding: 58px 0 54px; overflow: hidden;
+    }
+    .hero.student-hero { grid-template-columns: 1fr; min-height: 0; padding: 62px 0 44px; }
+    .student-hero h1 { max-width: 780px; }
+    .hero::before {
+      content: ""; position: absolute; width: 430px; height: 430px; border-radius: 50%;
+      right: -150px; top: -190px; background: #eaf2fa; z-index: -1;
+    }
+    .eyebrow { display: inline-flex; align-items: center; gap: 10px; padding: 7px 12px; border-radius: 999px; color: var(--blue); background: #e9f3fc; font-size: 13px; font-weight: 800; }
+    .eyebrow::before { content: ""; width: 28px; height: 4px; border-radius: 1px; background: var(--lime); }
+    h1 { margin: 22px 0 20px; font-size: clamp(48px, 6vw, 70px); line-height: 1.12; letter-spacing: -.055em; }
+    h1 em { color: var(--blue); font-style: normal; position: relative; }
+    h1 em::after { content: ""; position: absolute; left: 2px; right: 0; bottom: -5px; height: 7px; border-radius: 2px; background: var(--lime); z-index: -1; }
+    .lead { max-width: 550px; margin: 0 0 29px; color: var(--muted); font-size: 17px; line-height: 1.85; }
+    .hero-actions { display: flex; align-items: center; gap: 13px; }
+    .hero-actions .btn { min-height: 52px; padding: 0 25px; font-size: 16px; }
+    .trust { margin-top: 28px; display: flex; align-items: center; gap: 13px; color: var(--muted); font-size: 14px; }
+    .faces { display: flex; }
+    .face { width: 32px; height: 32px; margin-left: -8px; border: 3px solid white; border-radius: 50%; display: grid; place-items: center; font-size: 14px; }
+    .face:first-child { margin-left: 0; background: #ffd5a7; }
+    .face:nth-child(2) { background: #c9d6ff; }
+    .face:nth-child(3) { background: #ffcddd; }
+    .face:nth-child(4) { background: #d4f3c1; }
+
+    .hero-board { position: relative; height: 340px; }
+    .board {
+      position: absolute; inset: 16px 18px 10px 35px; border-radius: 22px;
+      background: linear-gradient(145deg, #125999, #0a356f); box-shadow: 0 24px 54px rgba(11, 58, 117, .22); padding: 31px; color: white;
+      border: 1px solid rgba(255,255,255,.18); border-left: 6px solid var(--lime);
+    }
+    .board-head { display: flex; justify-content: space-between; align-items: start; }
+    .board-head small { color: #aeb7cf; }
+    .board-head strong { display: block; margin-top: 3px; font-size: 22px; }
+    .status { padding: 6px 11px; border-radius: 6px; color: #3d2a00; background: var(--lime); font-size: 12px; font-weight: 800; }
+    .route { margin: 30px 0 22px; display: grid; grid-template-columns: 1fr 54px 1fr; align-items: center; }
+    .route div:nth-child(2) { height: 2px; background: #4c5672; position: relative; }
+    .route div:nth-child(2)::after { content: ""; position: absolute; right: 0; top: -4px; width: 9px; height: 9px; border-radius: 50%; background: var(--orange); }
+    .route strong { display: block; font-size: 28px; }
+    .route span { color: #aeb7cf; font-size: 13px; }
+    .route .right { text-align: right; }
+    .board-note { border-top: 1px solid #39425d; padding-top: 20px; display: flex; justify-content: space-between; gap: 24px; font-size: 14px; color: #d6dbea; }
+    .sticker { position: absolute; background: white; color: var(--ink); box-shadow: var(--shadow); border: 1px solid var(--line); border-radius: 9px; font-weight: 800; }
+    .sticker.one { left: 0; bottom: 18px; padding: 14px 19px; transform: rotate(-2deg); }
+    .sticker.two { right: 0; top: 0; padding: 14px 17px; transform: rotate(2deg); }
+    .sticker span { margin-right: 7px; }
+
+    .section { padding: 58px 0 76px; }
+    .section.soft { background: #edf4fa; border-top: 1px solid #e2ebf3; border-bottom: 1px solid #e2ebf3; }
+    .section-head { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin-bottom: 25px; }
+    .section-head h2 { margin: 0; font-size: 32px; letter-spacing: -.04em; }
+    .section-head p { margin: 7px 0 0; color: var(--muted); }
+    .more { padding: 0; border: 0; background: none; color: var(--blue); font: inherit; font-weight: 800; font-size: 14px; cursor: pointer; white-space: nowrap; }
+
+    .events { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-items: start; }
+    .event { overflow: hidden; background: white; border-radius: 16px; border: 1px solid var(--line); box-shadow: 0 6px 20px rgba(16, 42, 67, .055); transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+    .event:hover { transform: translateY(-3px); border-color: #9bbddd; box-shadow: 0 15px 32px rgba(16, 60, 99, .11); }
+    .event[open] { border-color: #9bbddd; box-shadow: 0 17px 40px rgba(16, 60, 99, .12); }
+    .event-preview { display: block; cursor: pointer; list-style: none; }
+    .event-preview::-webkit-details-marker { display: none; }
+    .event-preview:focus-visible { outline: 3px solid var(--blue); outline-offset: -3px; }
+    .event-preview:hover .event-open { color: #07396e; }
+    .event-open { color: var(--blue); font-size: 13px; font-weight: 800; white-space: nowrap; }
+    .event-open::after { content: ' →'; }
+    .event[open] .event-open::after { content: ' ↑'; }
+    .event-expanded { padding: 0 20px 20px; border-top: 1px solid var(--line); }
+    .event-body { padding: 20px 21px; }
+    .event-body h3 { margin: 9px 0 11px; font-size: 20px; line-height: 1.4; min-height: 2.8em; }
+    .event-kind { color: var(--blue); font-size: 13px; font-weight: 800; }
+    .event-kind span { margin-right: 6px; font-size: 18px; }
+    .event-brief { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
+    .event-brief span + span::before { content: ' · '; }
+    .event-preview-bottom { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 16px; padding-top: 13px; border-top: 1px solid #edf2f7; }
+    .meta { display: grid; gap: 7px; color: var(--muted); font-size: 14px; }
+    .meta span b { color: var(--ink); font-weight: 700; }
+    .event-foot { margin-top: 18px; padding-top: 15px; border-top: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; }
+    .host { display: flex; align-items: center; gap: 9px; font-size: 13px; color: var(--muted); }
+    .host-avatar { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: #edf0f7; }
+    .seats { font-size: 13px; color: var(--blue); font-weight: 800; }
+    .event-summary { margin: 13px 0 0; color: #53687c; font-size: 14px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 14px 0 2px; }
+    .chip { padding: 5px 10px; border-radius: 999px; color: #31516f; background: #edf4fa; font-size: 12px; font-weight: 800; }
+    .chip.updated { color: #604300; background: #fff0c7; }
+    .chip.risk { color: #8b1e18; background: #ffe5e2; }
+    .chip.student { color: #154f40; background: #dff5ed; }
+    .info-alert { margin-top: 13px; padding: 10px 11px; border-radius: 9px; background: #fff8e6; color: #71551b; font-size: 13px; }
+    .info-alert.high { background: #fff0ef; color: #8b1e18; }
+    .assistant-box { margin-top: 13px; padding: 12px 13px; border-left: 3px solid var(--blue); border-radius: 8px; background: #f4f8fc; }
+    .assistant-box strong { display: block; margin-bottom: 5px; color: var(--ink); font-size: 13px; }
+    .assistant-box ul, .assistant-detail-list { margin: 0; padding-left: 19px; color: #53687c; font-size: 13px; }
+    .assistant-box li + li, .assistant-detail-list li + li { margin-top: 3px; }
+    .assistant-label { display: inline-flex; align-items: center; gap: 6px; color: var(--blue); }
+    .notice-details { margin-top: 13px; border-top: 1px dashed var(--line); padding-top: 11px; font-size: 13px; }
+    .notice-details summary { color: var(--blue); font-weight: 800; cursor: pointer; }
+    .notice-details p { margin: 8px 0 0; color: var(--muted); }
+    .feed-tools { display: grid; grid-template-columns: 1.5fr repeat(3, minmax(140px, .65fr)); gap: 11px; margin-bottom: 16px; padding: 14px; border: 1px solid var(--line); border-radius: 16px; background: white; box-shadow: 0 8px 24px rgba(16, 42, 67, .05); }
+    .feed-tools input, .feed-tools select { min-width: 0; min-height: 46px; padding: 0 13px; border: 1px solid var(--line); border-radius: 10px; color: var(--ink); background: #f9fbfe; font: inherit; }
+    .feed-tools input:focus, .feed-tools select:focus { outline: 3px solid rgba(11, 79, 156, .10); border-color: var(--blue); }
+    .feed-meta { display: flex; justify-content: space-between; gap: 16px; margin: 0 0 20px; color: var(--muted); font-size: 13px; }
+    .data-note { padding: 8px 12px; border-radius: 999px; background: #edf4fa; }
+    .empty-feed { grid-column: 1 / -1; padding: 55px 20px; border: 1px dashed #b9cbdc; border-radius: 14px; color: var(--muted); text-align: center; }
+
+    .safety {
+      margin-top: 62px; display: grid; grid-template-columns: 1fr 1.45fr; gap: 48px;
+      align-items: center; background: linear-gradient(135deg, #0b3a75, #11588f); color: white; padding: 44px; border-radius: 20px; border-left: 7px solid var(--lime); box-shadow: var(--shadow);
+    }
+    .safety h2 { font-size: 32px; line-height: 1.3; margin: 10px 0 13px; }
+    .safety p { margin: 0; color: #b9c1d6; }
+    .safe-list { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .safe-item { padding: 17px; border: 1px solid rgba(255,255,255,.09); border-radius: 12px; background: rgba(255,255,255,.09); font-size: 14px; }
+    .safe-item b { display: block; color: #ffd16e; margin-bottom: 3px; }
+
+    footer { padding: 32px 0 42px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; }
+    .footer-inner { display: flex; justify-content: space-between; gap: 24px; }
+
+    dialog {
+      width: min(560px, calc(100% - 28px)); max-height: calc(100vh - 32px); overflow: auto;
+      padding: 0; border: 0; border-radius: 24px; color: var(--ink); background: white;
+      box-shadow: 0 28px 80px rgba(18, 30, 70, .28);
+    }
+    dialog::backdrop { background: rgba(12, 20, 43, .62); backdrop-filter: blur(5px); }
+    .modal-head { display: flex; justify-content: space-between; align-items: start; padding: 28px 30px 20px; border-bottom: 1px solid var(--line); }
+    .modal-head h2 { margin: 0; font-size: 25px; letter-spacing: -.03em; }
+    .modal-head p { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
+    .close-btn { width: 38px; height: 38px; border: 0; border-radius: 50%; background: var(--soft); color: var(--ink); font-size: 23px; cursor: pointer; }
+    .publish-form { padding: 24px 30px 30px; }
+    .field { margin-bottom: 18px; }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+    .field label { display: block; margin-bottom: 7px; font-size: 14px; font-weight: 800; }
+    .field input, .field select, .field textarea {
+      width: 100%; min-height: 48px; padding: 11px 13px; border: 1px solid #dce1eb;
+      border-radius: 12px; color: var(--ink); background: white; font: inherit; font-size: 15px;
+      outline: none;
+    }
+    .field textarea { min-height: 88px; resize: vertical; }
+    .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(35, 86, 255, .10); }
+    .required { color: #e04b3f; }
+    .form-note { margin: -4px 0 20px; color: var(--muted); font-size: 13px; }
+    .form-actions { display: flex; justify-content: flex-end; gap: 10px; }
+    .form-actions .btn { min-width: 100px; }
+    .toast {
+      position: fixed; left: 50%; bottom: 28px; z-index: 20; transform: translate(-50%, 18px);
+      padding: 12px 18px; border-radius: 12px; background: var(--ink); color: white; font-size: 14px;
+      opacity: 0; pointer-events: none; transition: .25s ease;
+    }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+    .auth-error { min-height: 22px; margin: -5px 0 12px; color: #d93f37; font-size: 13px; }
+    .auth-submit { width: 100%; min-height: 48px; }
+    .auth-switch { margin: 16px 0 0; color: var(--muted); font-size: 13px; text-align: right; }
+    .auth-switch button { padding: 0; border: 0; background: none; color: var(--blue); font: inherit; font-weight: 800; cursor: pointer; }
+    .user-menu { position: relative; }
+    .user-chip { gap: 8px; }
+    .user-avatar { width: 27px; height: 27px; display: grid; place-items: center; border-radius: 50%; color: white; background: var(--blue); font-size: 12px; }
+    .logout-card { position: absolute; right: 0; top: calc(100% + 8px); z-index: 12; width: 150px; padding: 8px; border: 1px solid var(--line); border-radius: 13px; background: white; box-shadow: var(--shadow); }
+    .logout-card button { width: 100%; padding: 9px 10px; border: 0; border-radius: 9px; background: transparent; color: #d93f37; text-align: left; font: inherit; cursor: pointer; }
+    .logout-card button:hover { background: #fff1f0; }
+
+    @media (max-width: 900px) {
+      .nav-links { display: none; }
+      .hero { grid-template-columns: 1fr; gap: 32px; padding-top: 52px; }
+      .hero-board { height: 360px; }
+      .events { grid-template-columns: 1fr 1fr; }
+      .event:last-child { grid-column: 1 / -1; }
+      .feed-tools { grid-template-columns: 1fr 1fr; }
+      .safety { grid-template-columns: 1fr; gap: 28px; }
+    }
+
+    @media (max-width: 620px) {
+      .shell { width: min(100% - 28px, 1180px); }
+      header { height: 68px; }
+      nav { gap: 6px; }
+      .brand { flex-shrink: 0; gap: 6px; font-size: 16px; white-space: nowrap; }
+      .brand-mark { flex-shrink: 0; width: 32px; height: 32px; font-size: 15px; }
+      .nav-actions { flex-shrink: 0; gap: 5px; }
+      .nav-actions .btn { min-height: 38px; padding: 0 9px; font-size: 12px; white-space: nowrap; }
+      h1 { font-size: 46px; }
+      .lead { font-size: 16px; }
+      .hero-actions { align-items: stretch; flex-direction: column; }
+      .hero-board { height: 330px; }
+      .board { inset: 14px 3px 14px 8px; padding: 24px 20px; }
+      .sticker.one { left: -5px; }
+      .sticker.two { right: -4px; }
+      .events { grid-template-columns: 1fr; }
+      .event:last-child { grid-column: auto; }
+      .section { padding: 50px 0; }
+      .section-head { align-items: start; }
+      .section-head .more { margin-top: 7px; }
+      .safety { margin-top: 48px; padding: 31px 22px; }
+      .safe-list { grid-template-columns: 1fr; }
+      .footer-inner { flex-direction: column; }
+      .modal-head { padding: 23px 20px 17px; }
+      .publish-form { padding: 20px; }
+      .field-row { grid-template-columns: 1fr; gap: 0; }
+      .feed-tools { grid-template-columns: 1fr; }
+      .feed-meta { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav class="shell" aria-label="主导航">
+      <a class="brand" href="index.html" style="color: inherit; text-decoration: none"><span class="brand-mark">讯</span>校讯拾机</a>
+      <div class="nav-links"><a class="nav-link" href="index.html">首页</a><button class="nav-link" type="button" data-open-discover aria-current="page">同学活动</button><a class="nav-link" href="official.html">官方活动</a></div>
+      <div class="nav-actions">
+        <button class="btn" id="login-button" type="button" data-open-auth>登录 / 注册</button>
+        <div class="user-menu" id="user-menu" hidden>
+          <button class="btn user-chip" id="user-chip" type="button"><span class="user-avatar" id="user-avatar"></span><span id="user-name"></span></button>
+          <div class="logout-card" id="logout-card" hidden><button id="logout-button" type="button">退出登录</button></div>
+        </div>
+        <button class="btn primary" type="button" data-open-publish>发布组局</button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero student-hero shell">
+      <div>
+        <div class="eyebrow">校讯拾机 · 同学活动</div>
+        <h1>和同学一起，<br><em>发现新的可能</em></h1>
+        <p class="lead">这里集中展示非官方活动与学生个人发布的组局。先看卡片了解重点，感兴趣再展开详情、确认参与条件。</p>
+        <div class="hero-actions">
+          <button class="btn primary" type="button" data-open-discover>浏览同学活动</button>
+          <a class="btn" href="official.html">查看官方活动</a>
+        </div>
+        <div class="trust"><span>非官方活动与官方活动分开呈现；参与前请核实关键信息。</span></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head">
+          <div><h2>同学活动</h2><p>全部非官方活动集中展示；以 2026 年 9 月 19 日为统一时间背景。</p></div>
+          <button class="more" type="button" data-open-all>清除筛选 →</button>
+        </div>
+        <div class="feed-tools" aria-label="活动搜索和筛选">
+          <input id="search-input" type="search" placeholder="搜索活动、地点、对象或条件">
+          <select id="category-filter" aria-label="按活动类型筛选"><option value="all">全部类型</option><option>比赛挑战</option><option>学习分享</option><option>项目招募</option><option>志愿实践</option><option>校园活动</option><option>学生发布</option></select>
+          <select id="status-filter" aria-label="按状态筛选"><option value="all">全部状态</option><option value="open">报名中</option><option value="today">今日活动</option><option value="upcoming">即将开始</option><option value="ongoing">进行中</option><option value="closing">即将截止</option><option value="ended">已结束</option><option value="replay">等待回放</option><option value="long_term">长期招募/有效</option><option value="unknown_capacity">满员状态未知</option><option value="waitlist">报名截止但可候补</option><option value="updated">信息已更新</option><option value="uncertain">信息待确认</option><option value="risk">风险信息</option><option value="commercial">疑似推广</option></select>
+          <select id="audience-filter" aria-label="按适合人群筛选"><option value="all">全部人群</option><option value="newcomer">新生友好</option><option value="student">学生个人发布</option></select>
+        </div>
+        <div class="feed-meta"><span id="result-count">正在载入活动…</span><span class="data-note">官方活动已单独收录在“官方活动”子页面</span></div>
+        <div class="events" id="event-list"></div>
+
+        <section class="safety">
+          <div>
+            <span class="eyebrow" style="color: var(--lime)">参与前的小提醒</span>
+            <h2>认识新朋友，<br>也要照顾好自己。</h2>
+            <p>非官方信息及学生个人发布内容，参与前请再确认来源与关键细节。</p>
+          </div>
+          <div class="safe-list">
+            <div class="safe-item"><b>确认发布者</b>了解活动发起人及联系方式</div>
+            <div class="safe-item"><b>公开场所优先</b>首次见面建议选择校内地点</div>
+            <div class="safe-item"><b>核对活动信息</b>提前确认时间、地点与可能的费用</div>
+            <div class="safe-item"><b>保留自主选择</b>遇到不适可以随时终止联系</div>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="auth-dialog" aria-labelledby="auth-title">
+    <div class="modal-head">
+      <div><h2 id="auth-title">登录校讯拾机</h2><p id="auth-description">登录后即可发布和管理自己的组局。</p></div>
+      <button class="close-btn" type="button" aria-label="关闭登录窗口" data-close-auth>×</button>
+    </div>
+    <div class="publish-form">
+      <form id="login-form">
+        <div class="field"><label for="login-email">邮箱 <span class="required">*</span></label><input id="login-email" name="email" type="email" autocomplete="email" placeholder="请输入邮箱" required></div>
+        <div class="field"><label for="login-password">密码 <span class="required">*</span></label><input id="login-password" name="password" type="password" minlength="6" autocomplete="current-password" placeholder="至少 6 位字符" required></div>
+        <p class="auth-error" id="login-error" role="alert"></p>
+        <button class="btn primary auth-submit" type="submit">登录</button>
+        <p class="auth-switch">还没有账号？<button type="button" data-auth-switch="register">注册</button></p>
+      </form>
+      <form id="register-form" hidden>
+        <div class="field"><label for="register-name">昵称 <span class="required">*</span></label><input id="register-name" name="nickname" type="text" maxlength="12" autocomplete="nickname" placeholder="大家会看到这个名字" required></div>
+        <div class="field"><label for="register-email">邮箱 <span class="required">*</span></label><input id="register-email" name="email" type="email" autocomplete="email" placeholder="请输入邮箱" required></div>
+        <div class="field-row">
+          <div class="field"><label for="register-password">设置密码 <span class="required">*</span></label><input id="register-password" name="password" type="password" minlength="6" autocomplete="new-password" placeholder="至少 6 位字符" required></div>
+          <div class="field"><label for="register-confirm">确认密码 <span class="required">*</span></label><input id="register-confirm" name="confirm" type="password" minlength="6" autocomplete="new-password" placeholder="再次输入密码" required></div>
+        </div>
+        <p class="auth-error" id="register-error" role="alert"></p>
+        <button class="btn primary auth-submit" type="submit">创建账号并登录</button>
+        <p class="auth-switch">已有账号？<button type="button" data-auth-switch="login">返回登录</button></p>
+      </form>
+    </div>
+  </dialog>
+
+  <dialog id="publish-dialog" aria-labelledby="publish-title">
+    <div class="modal-head">
+      <div><h2 id="publish-title">发布组局</h2><p>你发布的内容将归入“同学活动”。</p></div>
+      <button class="close-btn" type="button" aria-label="关闭发布窗口" data-close-publish>×</button>
+    </div>
+    <form class="publish-form" id="publish-form">
+      <div class="field">
+        <label for="activity-title">组局标题 <span class="required">*</span></label>
+        <input id="activity-title" name="title" type="text" maxlength="30" placeholder="例如：周五晚一起打羽毛球" required>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="activity-time">活动时间 <span class="required">*</span></label>
+          <input id="activity-time" name="time" type="datetime-local" required>
+        </div>
+        <div class="field">
+          <label for="activity-size">几人局 <span class="required">*</span></label>
+          <select id="activity-size" name="size" required>
+            <option value="" selected disabled>选择人数</option>
+            <option value="2">2 人局</option><option value="3">3 人局</option><option value="4">4 人局</option>
+            <option value="5">5 人局</option><option value="6">6 人局</option><option value="8">8 人局</option><option value="10">10 人局</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="activity-type">活动类型 <span class="required">*</span></label>
+          <select id="activity-type" name="type" required>
+            <option value="" selected disabled>选择类型</option>
+            <option>运动健身</option><option>一起吃饭</option><option>桌游娱乐</option>
+            <option>学习自习</option><option>兴趣交流</option><option>周末出行</option><option>其他活动</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="activity-location">活动地点 <span class="required">*</span></label>
+          <input id="activity-location" name="location" type="text" maxlength="40" placeholder="例如：东区羽毛球馆" required>
+        </div>
+      </div>
+      <div class="field">
+        <label for="activity-gender">参与者性别限制 <span class="required">*</span></label>
+        <select id="activity-gender" name="gender" required>
+          <option value="无性别限制" selected>无性别限制</option>
+          <option value="仅女生加入">仅女生加入</option>
+          <option value="仅男生加入">仅男生加入</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="activity-note">补充说明</label>
+        <textarea id="activity-note" name="note" maxlength="120" placeholder="可以说明费用、集合方式或参与要求"></textarea>
+      </div>
+      <p class="form-note">发布后，你的组局会显示在当前页面中。</p>
+      <div class="form-actions">
+        <button class="btn" type="button" data-close-publish>取消</button>
+        <button class="btn primary" type="submit">确认发布</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="toast" id="publish-toast" role="status" aria-live="polite">组局发布成功</div>
+
+  <footer>
+    <div class="shell footer-inner"><span>© 2026 校讯拾机 · 校园活动与机会平台</span><span>不错过校园里的每一次可能</span></div>
+  </footer>
+  <script src="data.js"></script>
+  <script>
+    const publishDialog = document.getElementById('publish-dialog');
+    const authDialog = document.getElementById('auth-dialog');
+    const form = document.getElementById('publish-form');
+    const loginForm = document.getElementById('login-form');
+    const registerForm = document.getElementById('register-form');
+    const timeInput = document.getElementById('activity-time');
+    const eventList = document.getElementById('event-list');
+    const toast = document.getElementById('publish-toast');
+    const searchInput = document.getElementById('search-input');
+    const categoryFilter = document.getElementById('category-filter');
+    const statusFilter = document.getElementById('status-filter');
+    const audienceFilter = document.getElementById('audience-filter');
+    const storageKey = 'coujuer-published-events';
+    const usersKey = 'coujuer-users';
+    const sessionKey = 'coujuer-session';
+    let currentUser = null;
+    let publishAfterLogin = false;
+
+    const categoryStyle = {
+      '比赛挑战': ['game', '🏆'], '学习分享': ['custom', '📚'], '项目招募': ['custom', '🧩'],
+      '志愿实践': ['food', '🤝'], '校园活动': ['sport', '📌'], '学生发布': ['sport', '🎒']
+    };
+
+    function escapeHTML(value) {
+      return String(value ?? '').replace(/[&<>'"]/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
+    }
+
+    function getReferenceNow() {
+      const now = new Date();
+      const localDay = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+      return localDay === window.CAMPUS_DATA_REFERENCE_DATE ? now : new Date('2026-09-19T12:00:00+08:00');
+    }
+
+    function formatTime(value) {
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return value || '未提供';
+      return new Intl.DateTimeFormat('zh-CN', { month: 'numeric', day: 'numeric', weekday: 'short', hour: '2-digit', minute: '2-digit' }).format(date);
+    }
+
+    function getPublishedEvents() {
+      try { return JSON.parse(localStorage.getItem(storageKey) || '[]'); } catch (_) { return []; }
+    }
+
+    function normalizePublished(item, index) {
+      const hasNote = Boolean((item.note || '').trim());
+      const itemDay = String(item.time || '').slice(0, 10);
+      const codes = ['student'];
+      const tags = ['学生个人发布'];
+      if (itemDay === window.CAMPUS_DATA_REFERENCE_DATE) { codes.push('today'); tags.push('今日活动'); }
+      if (!hasNote) { codes.push('uncertain'); tags.push('信息待确认'); }
+      return {
+        id: `local-${index}-${item.time || ''}`, originalIds: [], title: item.title, category: '学生发布', recordKind: item.type || '学生组局',
+        sourceType: 'student', sourceLabel: '学生个人发布', studentPublished: true, official: false,
+        timeText: formatTime(item.time), start: item.time, location: item.location || '未提供',
+        audience: `${item.size || '未注明'}人局 · ${item.gender || '无性别限制'}`,
+        conditions: hasNote ? item.note : '未填写补充说明', newcomerFriendly: false,
+        summary: hasNote ? item.note : `由${item.host || '学生用户'}发布的自主活动。`,
+        statusTags: tags, statusCodes: codes, completeness: hasNote ? '基础信息已填写' : '部分信息缺失',
+        missing: hasNote ? [] : ['费用、集合方式或其他参与条件'], riskLevel: 'caution', riskLabel: '学生个人发布，参与前请核实',
+        host: item.host || '学生用户', size: item.size, notices: []
+      };
+    }
+
+    function withTimeStatus(item) {
+      const copy = { ...item, statusTags: [...(item.statusTags || [])], statusCodes: [...(item.statusCodes || [])] };
+      if (!copy.statusCodes.includes('time_sensitive') || !copy.start) return copy;
+      const now = getReferenceNow();
+      const start = new Date(copy.start);
+      const end = copy.end ? new Date(copy.end) : null;
+      copy.statusTags = copy.statusTags.filter(tag => !['即将开始', '进行中', '已结束'].includes(tag));
+      if (now < start) copy.statusTags.push('即将开始');
+      else if (!end || now <= end) copy.statusTags.push('进行中');
+      else copy.statusTags.push('已结束');
+      return copy;
+    }
+
+    function allFeedItems() {
+      const builtIn = (window.CAMPUS_ACTIVITIES || []).filter(item => !item.official);
+      return [...getPublishedEvents().map(normalizePublished), ...builtIn].map(withTimeStatus).map(item => ({
+        ...item,
+        assistant: window.CAMPUS_ASSISTANT.analyzeActivity(item)
+      }));
+    }
+
+    function chipClass(item, tag) {
+      if (tag.includes('风险') || tag.includes('商业')) return 'risk';
+      if (item.studentPublished) return 'student';
+      if (tag.includes('更新')) return 'updated';
+      return '';
+    }
+
+    function renderCard(item) {
+      const style = categoryStyle[item.category] || categoryStyle['校园活动'];
+      const riskClass = item.riskLevel === 'high' ? ' high' : '';
+      const assistant = item.assistant || window.CAMPUS_ASSISTANT.analyzeActivity(item);
+      const alertParts = assistant.risk.reasons.slice(0, 3);
+      const notices = (item.notices || []).map(notice => `<p><b>${escapeHTML(notice.id)} · ${escapeHTML(notice.type)}：</b>${escapeHTML(notice.text)}</p>`).join('');
+      const reasons = assistant.attentionReasons.length
+        ? `<div class="assistant-box"><strong><span class="assistant-label">✦ 拾机助手</span> · 为什么值得关注</strong><ul>${assistant.attentionReasons.map(reason => `<li>${escapeHTML(reason)}</li>`).join('')}</ul></div>`
+        : '';
+      const detailItems = [...assistant.informationTips, ...assistant.risk.reasons];
+      const details = detailItems.length || notices
+        ? `<details class="notice-details"><summary>查看判断依据与完整提示</summary>${assistant.risk.label ? `<p><b>${escapeHTML(assistant.risk.label)}</b></p>` : ''}${detailItems.length ? `<ul class="assistant-detail-list">${detailItems.map(tip => `<li>${escapeHTML(tip)}</li>`).join('')}</ul>` : ''}${item.updateSummary ? `<p><b>更新摘要：</b>${escapeHTML(item.updateSummary)}</p>` : ''}${notices}</details>`
+        : '';
+      const sourceInitial = item.studentPublished ? '生' : '讯';
+      const footerRight = item.studentPublished && item.size ? `计划 ${escapeHTML(item.size)} 人` : `编号 ${escapeHTML((item.originalIds || []).join(' / ') || '用户发布')}`;
+      const keyStatus = assistant.risk.label || assistant.cardStatuses[0] || '查看详情';
+      return `<details class="event" data-id="${escapeHTML(item.id)}">
+        <summary class="event-preview" aria-label="查看${escapeHTML(item.title)}详情">
+          <div class="event-body">
+            <div class="event-kind"><span aria-hidden="true">${style[1]}</span>${escapeHTML(item.recordKind || item.category)}</div>
+            <h3>${escapeHTML(item.title)}</h3>
+            <p class="event-brief"><span>${escapeHTML(item.timeText || '时间未提供')}</span><span>${escapeHTML(item.location || '地点未提供')}</span></p>
+            <div class="event-preview-bottom"><span class="chip ${chipClass(item, keyStatus)}">${escapeHTML(keyStatus)}</span><span class="event-open">查看详情</span></div>
+          </div>
+        </summary>
+        <div class="event-expanded">
+          <div class="meta" style="margin-top: 17px"><span>👥 <b>${escapeHTML(item.audience || '未明确')}</b></span><span>📋 ${escapeHTML(item.conditions || '未提供')}</span>${item.deadlineText ? `<span>⏳ 截止 ${escapeHTML(item.deadlineText)}</span>` : ''}</div>
+          <p class="event-summary">${escapeHTML(item.summary || '')}</p>
+          ${assistant.risk.label ? `<div class="info-alert${riskClass}"><b>${escapeHTML(assistant.risk.label)}</b>${alertParts.length ? `：${escapeHTML(alertParts.join('；'))}` : ''}</div>` : ''}
+          ${reasons}
+          ${details}
+          <div class="event-foot"><div class="host"><span class="host-avatar">${sourceInitial}</span><span>${escapeHTML(item.sourceLabel || '来源未明确')}</span></div><span class="seats">${footerRight}</span></div>
+        </div>
+      </details>`;
+    }
+
+    function matchesFilters(item) {
+      const query = searchInput.value.trim().toLowerCase();
+      const assistant = item.assistant || window.CAMPUS_ASSISTANT.analyzeActivity(item);
+      const haystack = [item.title, item.category, item.recordKind, item.location, item.audience, item.conditions, item.summary, item.sourceLabel, ...assistant.statuses, ...assistant.informationTips, ...assistant.attentionReasons].join(' ').toLowerCase();
+      const categoryOK = categoryFilter.value === 'all' || item.category === categoryFilter.value;
+      const status = statusFilter.value;
+      const statusLabels = { open: '报名中', today: '今日活动', upcoming: '即将开始', ongoing: '进行中', closing: '即将截止', ended: '已结束', replay: '等待回放', long_term: '长期招募', unknown_capacity: '满员状态未知', waitlist: '报名已截止但可候补', updated: '信息已更新', uncertain: '信息待确认' };
+      const statusOK = status === 'all'
+        || (status === 'risk' && Boolean(assistant.risk.label))
+        || (status === 'commercial' && assistant.risk.label === '疑似商业推广')
+        || assistant.statuses.includes(statusLabels[status])
+        || (status === 'long_term' && assistant.statuses.includes('长期有效'));
+      const audience = audienceFilter.value;
+      const audienceOK = audience === 'all' || (audience === 'newcomer' && item.newcomerFriendly) || (audience === 'student' && item.studentPublished);
+      return (!query || haystack.includes(query)) && categoryOK && statusOK && audienceOK;
+    }
+
+    function renderFeed() {
+      const items = allFeedItems();
+      const filtered = items.filter(matchesFilters);
+      document.getElementById('result-count').textContent = `共 ${items.length} 条，当前显示 ${filtered.length} 条`;
+      eventList.innerHTML = filtered.length ? filtered.map(renderCard).join('') : '<div class="empty-feed">没有找到符合条件的活动，试试清除筛选或更换关键词。</div>';
+    }
+
+    function clearFilters(scroll = true) {
+      searchInput.value = '';
+      categoryFilter.value = 'all';
+      statusFilter.value = 'all';
+      audienceFilter.value = 'all';
+      renderFeed();
+      if (scroll) document.getElementById('event-list').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function setMinimumTime() { timeInput.min = `${window.CAMPUS_DATA_REFERENCE_DATE}T00:00`; }
+
+    function openPublish() {
+      if (!currentUser) { publishAfterLogin = true; openAuth('login'); return; }
+      setMinimumTime();
+      publishDialog.showModal();
+      setTimeout(() => document.getElementById('activity-title').focus(), 0);
+    }
+
+    async function hashPassword(password) {
+      const bytes = new TextEncoder().encode(password);
+      const digest = await crypto.subtle.digest('SHA-256', bytes);
+      return Array.from(new Uint8Array(digest)).map(value => value.toString(16).padStart(2, '0')).join('');
+    }
+
+    function getUsers() { try { return JSON.parse(localStorage.getItem(usersKey) || '[]'); } catch (_) { return []; } }
+    function showToast(message) { toast.textContent = message; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 2200); }
+
+    function switchAuthMode(mode) {
+      const isLogin = mode === 'login';
+      loginForm.hidden = !isLogin; registerForm.hidden = isLogin;
+      document.getElementById('auth-title').textContent = isLogin ? '登录校讯拾机' : '注册校讯拾机';
+      document.getElementById('auth-description').textContent = isLogin ? '登录后即可发布和管理自己的组局。' : '创建账号，发现更多校园活动与机会。';
+      document.getElementById('login-error').textContent = ''; document.getElementById('register-error').textContent = '';
+      if (!isLogin && !document.getElementById('register-email').value) document.getElementById('register-email').value = document.getElementById('login-email').value;
+      if (isLogin && !document.getElementById('login-email').value) document.getElementById('login-email').value = document.getElementById('register-email').value;
+    }
+
+    function openAuth(mode = 'login') {
+      switchAuthMode(mode); authDialog.showModal();
+      const field = mode === 'login' ? document.getElementById('login-email') : document.getElementById('register-name');
+      setTimeout(() => field.focus(), 0);
+    }
+
+    function updateAuthUI() {
+      document.getElementById('login-button').hidden = Boolean(currentUser);
+      document.getElementById('user-menu').hidden = !currentUser;
+      if (currentUser) { document.getElementById('user-name').textContent = currentUser.nickname; document.getElementById('user-avatar').textContent = currentUser.nickname.slice(0, 1); }
+    }
+
+    function completeLogin(user, message) {
+      currentUser = { email: user.email, nickname: user.nickname };
+      localStorage.setItem(sessionKey, JSON.stringify(currentUser)); updateAuthUI(); authDialog.close(); loginForm.reset(); registerForm.reset(); showToast(message);
+      if (publishAfterLogin) { publishAfterLogin = false; setTimeout(openPublish, 280); }
+    }
+
+    function loadSession() { try { currentUser = JSON.parse(localStorage.getItem(sessionKey) || 'null'); } catch (_) { currentUser = null; } updateAuthUI(); }
+
+    [searchInput, categoryFilter, statusFilter, audienceFilter].forEach(control => control.addEventListener(control === searchInput ? 'input' : 'change', renderFeed));
+    document.querySelectorAll('[data-open-discover]').forEach(button => button.addEventListener('click', () => clearFilters(true)));
+    document.querySelectorAll('[data-open-all]').forEach(button => button.addEventListener('click', () => clearFilters(true)));
+    document.querySelectorAll('[data-open-publish]').forEach(button => button.addEventListener('click', openPublish));
+    document.querySelectorAll('[data-close-publish]').forEach(button => button.addEventListener('click', () => publishDialog.close()));
+    publishDialog.addEventListener('click', event => { if (event.target === publishDialog) publishDialog.close(); });
+    document.querySelectorAll('[data-open-auth]').forEach(button => button.addEventListener('click', () => openAuth('login')));
+    document.querySelector('[data-close-auth]').addEventListener('click', () => { publishAfterLogin = false; authDialog.close(); });
+    authDialog.addEventListener('click', event => { if (event.target === authDialog) { publishAfterLogin = false; authDialog.close(); } });
+    document.querySelectorAll('[data-auth-switch]').forEach(button => button.addEventListener('click', () => { switchAuthMode(button.dataset.authSwitch); }));
+
+    loginForm.addEventListener('submit', async event => {
+      event.preventDefault(); const data = Object.fromEntries(new FormData(loginForm)); const passwordHash = await hashPassword(data.password);
+      const user = getUsers().find(item => item.email.toLowerCase() === data.email.trim().toLowerCase() && item.passwordHash === passwordHash);
+      if (!user) { document.getElementById('login-error').textContent = '邮箱或密码不正确，请重新输入。'; return; }
+      completeLogin(user, `欢迎回来，${user.nickname}`);
+    });
+
+    registerForm.addEventListener('submit', async event => {
+      event.preventDefault(); const data = Object.fromEntries(new FormData(registerForm)); const error = document.getElementById('register-error');
+      if (data.password !== data.confirm) { error.textContent = '两次输入的密码不一致。'; return; }
+      const users = getUsers(); const email = data.email.trim().toLowerCase();
+      if (users.some(item => item.email.toLowerCase() === email)) { error.textContent = '该邮箱已经注册，请直接登录。'; return; }
+      const user = { nickname: data.nickname.trim(), email, passwordHash: await hashPassword(data.password) };
+      users.push(user); localStorage.setItem(usersKey, JSON.stringify(users)); completeLogin(user, `注册成功，欢迎你，${user.nickname}`);
+    });
+
+    document.getElementById('user-chip').addEventListener('click', () => { const card = document.getElementById('logout-card'); card.hidden = !card.hidden; });
+    document.getElementById('logout-button').addEventListener('click', () => { localStorage.removeItem(sessionKey); currentUser = null; document.getElementById('logout-card').hidden = true; updateAuthUI(); showToast('已退出登录'); });
+
+    form.addEventListener('submit', event => {
+      event.preventDefault(); if (!form.reportValidity()) return;
+      const data = Object.fromEntries(new FormData(form)); data.host = currentUser.nickname;
+      const items = getPublishedEvents(); items.unshift(data); localStorage.setItem(storageKey, JSON.stringify(items.slice(0, 20)));
+      form.reset(); publishDialog.close(); categoryFilter.value = '学生发布'; statusFilter.value = 'all'; audienceFilter.value = 'all'; searchInput.value = ''; renderFeed(); showToast('组局发布成功');
+      eventList.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    loadSession();
+    renderFeed();
+  </script>
+</body>
+</html>
